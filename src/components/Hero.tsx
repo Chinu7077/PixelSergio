@@ -1,0 +1,99 @@
+import { Button } from "@/components/ui/button";
+
+interface HeroProps {
+  onNavigateToSection: (section: string) => void;
+}
+
+const Hero = ({ onNavigateToSection }: HeroProps) => {
+  return (
+    <section 
+      className="min-h-screen flex items-center justify-center relative overflow-hidden"
+    >
+      {/* Background Video */}
+      <div className="absolute inset-0 w-full h-full">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover blur-sm"
+          poster="/pokeball-pattern.jpg"
+        >
+          <source src="/pokemon-background.mp4" type="video/mp4" />
+          <source src="/pokemon-background.webm" type="video/webm" />
+          {/* Fallback for browsers that don't support video */}
+          <div className="w-full h-full bg-gradient-to-br from-pokemon-red/20 via-pokemon-blue/20 to-pokemon-yellow/20"></div>
+        </video>
+        
+        {/* Video Overlay for better text readability */}
+        <div className="absolute inset-0 bg-black/30 backdrop-blur-[1px]"></div>
+        
+        {/* Animated Pokemon-themed overlay elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          {/* Floating Pokeballs */}
+          <div className="absolute top-20 left-10 w-16 h-16 opacity-20 animate-float-slow">
+            <div className="w-full h-full rounded-full border-4 border-white/30 bg-gradient-to-br from-pokemon-red/40 to-pokemon-red/20"></div>
+          </div>
+          <div className="absolute top-40 right-20 w-12 h-12 opacity-15 animate-float-medium">
+            <div className="w-full h-full rounded-full border-3 border-white/20 bg-gradient-to-br from-pokemon-blue/40 to-pokemon-blue/20"></div>
+          </div>
+          <div className="absolute bottom-40 left-20 w-14 h-14 opacity-25 animate-float-fast">
+            <div className="w-full h-full rounded-full border-3 border-white/25 bg-gradient-to-br from-pokemon-yellow/40 to-pokemon-yellow/20"></div>
+          </div>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 text-center relative z-10">
+        <div className="max-w-4xl mx-auto">
+          {/* Main Logo with Pokemon Solid styling */}
+          <div className="mb-8">
+            <h1 className="font-pokemon text-4xl md:text-6xl lg:text-7xl text-pokemon-solid-yellow mb-4 drop-shadow-2xl text-pokemon-solid">
+              Pokidex
+            </h1>
+          </div>
+          
+          {/* Enhanced Subtitle */}
+          <p className="text-lg md:text-xl lg:text-2xl text-foreground/90 mb-8 font-medium max-w-2xl mx-auto leading-relaxed">
+            Your ultimate guide to explore, quiz, and learn about the amazing world of <span className="text-pokemon-red font-semibold">Pokémon</span>!
+          </p>
+          
+          {/* CTA Buttons with Pokemon Solid theme */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Button 
+              size="lg" 
+              className="bg-gradient-to-r from-pokemon-red to-pokemon-red/90 hover:from-pokemon-red/90 hover:to-pokemon-red text-white font-semibold px-8 py-3 shadow-pokeball hover:shadow-hover transition-all duration-300 transform hover:scale-105 border-2 border-pokemon-red/20"
+              onClick={() => onNavigateToSection('pokedex')}
+            >
+              🎯 Explore Pokédex
+            </Button>
+            <Button 
+              size="lg" 
+              variant="secondary"
+              className="bg-gradient-to-r from-pokemon-yellow to-pokemon-yellow/90 hover:from-pokemon-yellow/90 hover:to-pokemon-yellow text-black font-semibold px-8 py-3 shadow-electric hover:shadow-hover transition-all duration-300 transform hover:scale-105 border-2 border-pokemon-yellow/20"
+              onClick={() => onNavigateToSection('quiz')}
+            >
+              ⚡ Play Quiz
+            </Button>
+            <Button 
+              size="lg" 
+              variant="outline"
+              className="bg-gradient-to-r from-pokemon-blue/10 to-pokemon-blue/20 hover:from-pokemon-blue/20 hover:to-pokemon-blue/30 text-pokemon-blue border-2 border-pokemon-blue/30 hover:border-pokemon-blue/50 font-semibold px-8 py-3 shadow-card hover:shadow-hover transition-all duration-300 transform hover:scale-105"
+              onClick={() => onNavigateToSection('knowledge')}
+            >
+              📚 Learn Facts
+            </Button>
+          </div>
+        </div>
+        
+        {/* Enhanced scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+          <div className="w-6 h-10 border-2 border-foreground/40 rounded-full flex justify-center bg-background/20 backdrop-blur-sm">
+            <div className="w-1 h-3 bg-pokemon-red rounded-full mt-2 animate-pulse"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Hero;

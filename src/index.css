@@ -1,0 +1,325 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Pokémon Brand Colors */
+    --pokemon-red: 0 100% 50%;
+    --pokemon-yellow: 48 100% 50%;
+    --pokemon-blue: 235 65% 55%;
+    --pokemon-white: 0 0% 100%;
+    
+    /* Authentic Pokemon Solid Colors */
+    --pokemon-solid-yellow: 255 215 0; /* #FFD700 */
+    --pokemon-solid-blue: 30 58 35; /* #1E3A8A */
+    
+    /* Extended Palette */
+    --electric: 54 100% 62%;
+    --fire: 14 100% 57%;
+    --water: 207 100% 44%;
+    --grass: 118 39% 49%;
+    --psychic: 300 43% 67%;
+    --dark: 0 0% 15%;
+    --light-gray: 0 0% 95%;
+    
+    /* Semantic Colors */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 15%;
+    --primary: 0 100% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 48 100% 50%;
+    --secondary-foreground: 0 0% 15%;
+    --muted: 0 0% 95%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 235 65% 55%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 0 100% 50%;
+    --radius: 0.75rem;
+    
+    /* Pokémon Gradients */
+    --gradient-pokeball: linear-gradient(135deg, hsl(var(--pokemon-red)), hsl(var(--pokemon-white)));
+    --gradient-electric: linear-gradient(135deg, hsl(var(--electric)), hsl(var(--pokemon-yellow)));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--pokemon-blue)), hsl(var(--pokemon-red)));
+    --gradient-card: linear-gradient(145deg, hsl(var(--pokemon-white)), hsl(var(--light-gray)));
+    
+    /* Pokémon Shadows */
+    --shadow-pokeball: 0 10px 25px -5px hsl(var(--pokemon-red) / 0.3);
+    --shadow-electric: 0 8px 25px -8px hsl(var(--electric) / 0.4);
+    --shadow-card: 0 4px 20px -4px hsl(var(--pokemon-blue) / 0.15);
+    --shadow-hover: 0 10px 30px -10px hsl(var(--pokemon-red) / 0.25);
+    
+    /* Sidebar colors */
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 0 0% 8%;
+    --foreground: 0 0% 95%;
+    --card: 0 0% 12%;
+    --card-foreground: 0 0% 95%;
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 0 100% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 48 100% 60%;
+    --secondary-foreground: 0 0% 15%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 65%;
+    --accent: 235 65% 65%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 0 100% 60%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+    
+    /* Enhanced dark theme Pokemon colors */
+    --pokemon-red: 0 100% 60%;
+    --pokemon-yellow: 48 100% 60%;
+    --pokemon-blue: 235 65% 65%;
+    --pokemon-white: 0 0% 95%;
+    
+    /* Enhanced dark theme type colors */
+    --electric: 54 100% 70%;
+    --fire: 14 100% 65%;
+    --water: 207 100% 55%;
+    --grass: 118 39% 60%;
+    --psychic: 300 43% 75%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground transition-colors duration-300;
+    font-family: 'Inter', 'system-ui', 'sans-serif';
+  }
+  
+  .font-pokemon {
+    font-family: 'Pokemon Solid', 'Press Start 2P', cursive;
+    font-weight: normal;
+    letter-spacing: 0.05em;
+  }
+  
+  .font-sans {
+    font-family: 'Inter', 'system-ui', 'sans-serif';
+  }
+
+  /* Pokemon Solid theme specific fonts - only for main titles */
+  .font-pokemon-title {
+    font-family: 'Pokemon Solid', 'Press Start 2P', cursive;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+  }
+
+  .font-pokemon-body {
+    font-family: 'Inter', 'system-ui', 'sans-serif';
+    font-weight: normal;
+    line-height: 1.6;
+  }
+
+  .font-pokemon-button {
+    font-family: 'Inter', 'system-ui', 'sans-serif';
+    font-weight: bold;
+    letter-spacing: 0.05em;
+  }
+
+  /* Pokemon Solid text effect classes */
+  .text-pokemon-solid {
+    color: #FFD700 !important; /* Pokemon Yellow */
+    text-shadow: 
+      3px 3px 0 #1E3A8A, /* Pokemon Blue 3D shadow */
+      4px 4px 0 #1E3A8A, /* Deeper shadow for more depth */
+      5px 5px 0 #1E3A8A !important; /* Even deeper shadow */
+    -webkit-text-stroke: 1px #1E3A8A; /* Blue outline */
+  }
+
+  .text-pokemon-solid-light {
+    color: #FFD700 !important; /* Pokemon Yellow */
+    text-shadow: 
+      2px 2px 0 #1E3A8A, /* Pokemon Blue 3D shadow */
+      3px 3px 0 #1E3A8A !important; /* Deeper shadow for more depth */
+    -webkit-text-stroke: 0.5px #1E3A8A; /* Blue outline */
+  }
+
+  /* Enhanced Pokemon Solid theme animations */
+  @keyframes pokeball-bounce {
+    0%, 20%, 50%, 80%, 100% {
+      transform: translateY(0);
+    }
+    40% {
+      transform: translateY(-10px);
+    }
+    60% {
+      transform: translateY(-5px);
+    }
+  }
+
+  @keyframes electric-spark {
+    0%, 100% {
+      opacity: 0.4;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+  }
+
+  @keyframes fire-flicker {
+    0%, 100% {
+      opacity: 0.3;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.8;
+      transform: scale(1.1);
+    }
+  }
+
+  .animate-pokeball-bounce {
+    animation: pokeball-bounce 2s infinite;
+  }
+
+  .animate-electric-spark {
+    animation: electric-spark 1.5s infinite;
+  }
+
+  .animate-fire-flicker {
+    animation: fire-flicker 2s infinite;
+  }
+
+  /* Enhanced hover effects for Pokemon Solid theme */
+  .hover-pokemon-scale {
+    @apply transition-transform duration-300 hover:scale-105;
+  }
+
+  .hover-pokemon-glow {
+    @apply transition-all duration-300 hover:shadow-lg hover:shadow-pokemon-red/20;
+  }
+
+  /* Pokemon type gradients */
+  .bg-type-fire {
+    background: linear-gradient(135deg, hsl(14 100% 57%), hsl(0 100% 50%));
+  }
+
+  .bg-type-water {
+    background: linear-gradient(135deg, hsl(207 100% 44%), hsl(220 100% 50%));
+  }
+
+  .bg-type-grass {
+    background: linear-gradient(135deg, hsl(118 39% 49%), hsl(120 100% 40%));
+  }
+
+  .bg-type-electric {
+    background: linear-gradient(135deg, hsl(54 100% 62%), hsl(48 100% 50%));
+  }
+
+  .bg-type-psychic {
+    background: linear-gradient(135deg, hsl(300 43% 67%), hsl(280 100% 60%));
+  }
+
+  /* Floating Pokeball animations for hero background */
+  @keyframes float-slow {
+    0%, 100% {
+      transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-20px) rotate(180deg);
+    }
+  }
+
+  @keyframes float-medium {
+    0%, 100% {
+      transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-15px) rotate(-180deg);
+    }
+  }
+
+  @keyframes float-fast {
+    0%, 100% {
+      transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-25px) rotate(90deg);
+    }
+  }
+
+  .animate-float-slow {
+    animation: float-slow 6s ease-in-out infinite;
+  }
+
+  .animate-float-medium {
+    animation: float-medium 4s ease-in-out infinite;
+  }
+
+  .animate-float-fast {
+    animation: float-fast 5s ease-in-out infinite;
+  }
+
+  /* Pokéball shake effect for Pokémon cards */
+  @keyframes pokeball-shake {
+    0%, 100% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(-2px) rotate(-1deg);
+    }
+    75% {
+      transform: translateX(2px) rotate(1deg);
+    }
+  }
+
+  .group:hover .group-hover\:shadow-pokeball {
+    animation: pokeball-shake 0.5s ease-in-out;
+  }
+
+  /* Achievement sparkle effect */
+  @keyframes achievement-sparkle {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.8;
+      transform: scale(1.1);
+    }
+  }
+
+  .animate-pulse {
+    animation: achievement-sparkle 2s ease-in-out infinite;
+  }
+}
