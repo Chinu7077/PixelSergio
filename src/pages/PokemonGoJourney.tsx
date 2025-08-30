@@ -360,29 +360,29 @@ export default function PokemonGoJourney() {
           </CardHeader>
           <CardContent>
             {/* Summary Stats */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6 p-3 sm:p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-              <div className="text-center">
-                <p className="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400">{totalPokemon}</p>
-                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">Total Owned</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 mb-4 sm:mb-6 p-2 sm:p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+              <div className="text-center p-2 sm:p-0">
+                <p className="text-lg sm:text-xl lg:text-2xl font-bold text-blue-600 dark:text-blue-400 leading-tight">{totalPokemon.toLocaleString()}</p>
+                <p className="text-xs text-gray-600 dark:text-gray-300 leading-tight">Total Owned</p>
               </div>
-              <div className="text-center">
-                <p className="text-xl sm:text-2xl font-bold text-yellow-600 dark:text-yellow-400">{legendaryCount}</p>
-                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">Legendary</p>
+              <div className="text-center p-2 sm:p-0">
+                <p className="text-lg sm:text-xl lg:text-2xl font-bold text-yellow-600 dark:text-yellow-400 leading-tight">{legendaryCount.toLocaleString()}</p>
+                <p className="text-xs text-gray-600 dark:text-gray-300 leading-tight">Legendary</p>
               </div>
-              <div className="text-center">
-                <p className="text-xl sm:text-2xl font-bold text-purple-600 dark:text-purple-400">{shinyCount}</p>
-                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">Shiny</p>
+              <div className="text-center p-2 sm:p-0">
+                <p className="text-lg sm:text-xl lg:text-2xl font-bold text-purple-600 dark:text-purple-400 leading-tight">{shinyCount.toLocaleString()}</p>
+                <p className="text-xs text-gray-600 dark:text-gray-300 leading-tight">Shiny</p>
               </div>
-              <div className="text-center">
-                <p className="text-xl sm:text-2xl font-bold text-green-600 dark:text-green-400">10.5M</p>
-                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">PokéStops</p>
+              <div className="text-center p-2 sm:p-0">
+                <p className="text-lg sm:text-xl lg:text-2xl font-bold text-green-600 dark:text-green-400 leading-tight">10.5M</p>
+                <p className="text-xs text-gray-600 dark:text-gray-300 leading-tight">PokéStops</p>
               </div>
             </div>
 
             {/* Filters */}
-            <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 mb-4 sm:mb-6">
-              <div className="flex items-center gap-2">
-                <Filter className="h-4 w-4 text-gray-500" />
+            <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-4 mb-4 sm:mb-6">
+              <div className="flex items-center gap-2 w-full sm:w-auto">
+                <Filter className="h-4 w-4 text-gray-500 flex-shrink-0" />
                 <Select value={selectedType} onValueChange={setSelectedType}>
                   <SelectTrigger className="w-full sm:w-32">
                     <SelectValue placeholder="Type" />
@@ -435,13 +435,13 @@ export default function PokemonGoJourney() {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="flex items-center gap-2 flex-1">
-                <Search className="h-4 w-4 text-gray-500" />
+              <div className="flex items-center gap-2 w-full">
+                <Search className="h-4 w-4 text-gray-500 flex-shrink-0" />
                 <Input
                   placeholder="Search Pokémon..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full sm:max-w-md"
+                  className="w-full"
                 />
               </div>
             </div>
@@ -488,28 +488,32 @@ export default function PokemonGoJourney() {
             {/* Pagination */}
             {totalPages > 1 && (
               <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
-                <div className="text-sm text-gray-600 dark:text-gray-300 text-center sm:text-left">
-                  Showing {startIndex + 1}-{Math.min(endIndex, filteredPokemon.length)} of {filteredPokemon.length} Pokémon
+                <div className="text-sm text-gray-600 dark:text-gray-300 text-center sm:text-left mb-4 sm:mb-0">
+                  Showing {startIndex + 1}-{Math.min(endIndex, filteredPokemon.length)} of {filteredPokemon.length.toLocaleString()} Pokémon
                 </div>
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setCurrentPage(1)}
-                    disabled={currentPage === 1}
-                  >
-                    First
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setCurrentPage(currentPage - 1)}
-                    disabled={currentPage === 1}
-                  >
-                    Previous
-                  </Button>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm dark:text-gray-300">Page</span>
+                <div className="flex flex-col sm:flex-row items-center gap-2">
+                  <div className="flex items-center gap-1 sm:gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setCurrentPage(1)}
+                      disabled={currentPage === 1}
+                      className="text-xs px-2 py-1 h-8"
+                    >
+                      First
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setCurrentPage(currentPage - 1)}
+                      disabled={currentPage === 1}
+                      className="text-xs px-2 py-1 h-8"
+                    >
+                      Previous
+                    </Button>
+                  </div>
+                  <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-700 px-3 py-2 rounded-lg">
+                    <span className="text-xs sm:text-sm dark:text-gray-300">Page</span>
                     <Input
                       type="number"
                       min={1}
@@ -521,26 +525,30 @@ export default function PokemonGoJourney() {
                           setCurrentPage(page);
                         }
                       }}
-                      className="w-16 text-center"
+                      className="w-14 sm:w-16 text-center text-xs sm:text-sm h-8"
                     />
-                    <span className="text-sm dark:text-gray-300">of {totalPages}</span>
+                    <span className="text-xs sm:text-sm dark:text-gray-300">of {totalPages}</span>
                   </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setCurrentPage(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                  >
-                    Next
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setCurrentPage(totalPages)}
-                    disabled={currentPage === totalPages}
-                  >
-                    Last
-                  </Button>
+                  <div className="flex items-center gap-1 sm:gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setCurrentPage(currentPage + 1)}
+                      disabled={currentPage === totalPages}
+                      className="text-xs px-2 py-1 h-8"
+                    >
+                      Next
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setCurrentPage(totalPages)}
+                      disabled={currentPage === totalPages}
+                      className="text-xs px-2 py-1 h-8"
+                    >
+                      Last
+                    </Button>
+                  </div>
                 </div>
               </div>
             )}
