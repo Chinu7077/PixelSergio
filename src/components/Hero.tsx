@@ -28,19 +28,7 @@ const Hero = ({ onNavigateToSection }: HeroProps) => {
         {/* Video Overlay for better text readability */}
         <div className="absolute inset-0 bg-black/30 backdrop-blur-[1px]"></div>
         
-        {/* Animated Pokemon-themed overlay elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          {/* Floating Pokeballs */}
-          <div className="absolute top-20 left-10 w-16 h-16 opacity-20 animate-float-slow">
-            <div className="w-full h-full rounded-full border-4 border-white/30 bg-gradient-to-br from-pokemon-red/40 to-pokemon-red/20"></div>
-          </div>
-          <div className="absolute top-40 right-20 w-12 h-12 opacity-15 animate-float-medium">
-            <div className="w-full h-full rounded-full border-3 border-white/20 bg-gradient-to-br from-pokemon-blue/40 to-pokemon-blue/20"></div>
-          </div>
-          <div className="absolute bottom-40 left-20 w-14 h-14 opacity-25 animate-float-fast">
-            <div className="w-full h-full rounded-full border-3 border-white/25 bg-gradient-to-br from-pokemon-yellow/40 to-pokemon-yellow/20"></div>
-          </div>
-        </div>
+
       </div>
 
       <div className="container mx-auto px-4 text-center relative z-10">
@@ -86,11 +74,7 @@ const Hero = ({ onNavigateToSection }: HeroProps) => {
         </div>
         
         {/* Enhanced scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 border-2 border-foreground/40 rounded-full flex justify-center bg-background/20 backdrop-blur-sm">
-            <div className="w-1 h-3 bg-pokemon-red rounded-full mt-2 animate-pulse"></div>
-          </div>
-        </div>
+        
       </div>
     </section>
   );

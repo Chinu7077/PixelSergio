@@ -166,6 +166,7 @@ const Knowledge = () => {
   const navigate = useNavigate();
   const [displayedFacts, setDisplayedFacts] = useState<Fact[]>([]);
   const [isShuffling, setIsShuffling] = useState(false);
+  const [showAllFacts, setShowAllFacts] = useState(false);
 
   // Function to get random facts
   const getRandomFacts = (count: number = 6) => {
@@ -173,10 +174,20 @@ const Knowledge = () => {
     return shuffled.slice(0, count);
   };
 
+  // Get facts based on screen size and showAllFacts state
+  const getFactsToShow = () => {
+    if (showAllFacts) {
+      return getRandomFacts(6);
+    }
+    // Show only 3 facts on mobile, 6 on larger screens
+    const isMobile = window.innerWidth < 640;
+    return getRandomFacts(isMobile ? 3 : 6);
+  };
+
   // Initialize with random facts
   useEffect(() => {
-    setDisplayedFacts(getRandomFacts(6));
-  }, []);
+    setDisplayedFacts(getFactsToShow());
+  }, [showAllFacts]);
 
   // Function to shuffle facts with animation
   const shuffleFacts = async () => {
@@ -211,7 +222,7 @@ const Knowledge = () => {
         </div>
 
         {/* Facts Grid */}
-        <div className={`grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto transition-all duration-500 ${
+        <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-6xl mx-auto transition-all duration-500 ${
           isShuffling ? 'opacity-50 scale-95' : 'opacity-100 scale-100'
         }`}>
           {displayedFacts.map((fact, index) => {
@@ -251,12 +262,23 @@ const Knowledge = () => {
               </Card>
             );
           })}
+                </div>
+        
+        {/* Load More Button for Mobile */}
+        <div className="text-center mt-6 sm:hidden">
+          <Button
+            onClick={() => setShowAllFacts(!showAllFacts)}
+            variant="outline"
+            className="bg-gradient-to-r from-pokemon-blue/10 to-pokemon-blue/20 hover:from-pokemon-blue/20 hover:to-pokemon-blue/30 text-pokemon-blue border-2 border-pokemon-blue/30 hover:border-pokemon-blue/50"
+          >
+            {showAllFacts ? 'Show Less' : 'Load More Facts'}
+          </Button>
         </div>
-
+        
         {/* Fun Stats Section */}
         <div className="mt-16 text-center">
           <h3 className="font-pokemon text-2xl text-pokemon-solid-yellow mb-8 text-pokemon-solid">Did You Know?</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 max-w-4xl mx-auto">
             <div className="p-6 bg-card rounded-lg shadow-card hover:shadow-hover transition-all duration-300 border-2 border-border/50">
               <div className="text-3xl font-bold text-primary mb-2">1,025</div>
               <div className="text-sm text-muted-foreground">Total Pokémon</div>

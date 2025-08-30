@@ -1,4 +1,4 @@
-import { Heart } from "lucide-react";
+
 
 interface FooterProps {
   onNavigateToSection: (section: string) => void;
@@ -14,7 +14,7 @@ const Footer = ({ onNavigateToSection }: FooterProps) => {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Logo and Description */}
-          <div className="text-center md:text-left">
+          <div className="text-center md:text-left md:col-span-1">
             <h3 className="font-pokemon text-2xl mb-4 text-pokemon-solid-yellow text-pokemon-solid">🎯 Pokidex</h3>
             <p className="text-gray-700 leading-relaxed">
               Your ultimate companion for exploring the wonderful world of Pokémon. 
@@ -23,7 +23,7 @@ const Footer = ({ onNavigateToSection }: FooterProps) => {
           </div>
 
           {/* Quick Links */}
-          <div className="text-center">
+          <div className="hidden md:block text-center">
             <h4 className="font-semibold text-lg mb-4 text-gray-800">Quick Links</h4>
             <nav className="space-y-2">
               <button
@@ -54,7 +54,7 @@ const Footer = ({ onNavigateToSection }: FooterProps) => {
           </div>
 
           {/* Fun Stats */}
-          <div className="text-center md:text-right">
+          <div className="hidden md:block text-center md:text-right">
             <h4 className="font-semibold text-lg mb-4 text-gray-800">Pokémon Stats</h4>
             <div className="space-y-2 text-gray-600">
               <div>🎮 1,025 Total Pokémon</div>
@@ -69,7 +69,7 @@ const Footer = ({ onNavigateToSection }: FooterProps) => {
         <div className="border-t border-gray-200 mt-8 pt-8">
           <div className="text-center">
             <p className="flex items-center justify-center gap-2 text-gray-600 mb-4">
-              Made with <Heart className="h-4 w-4 text-pokemon-red fill-current" /> by Chinu ✨
+              Made with ❤️ by Chinu ✨
             </p>
             <p className="text-sm text-gray-500">
               © 2024 Pokidex. This is a fan-made project. Pokémon is a trademark of Nintendo, Game Freak, and Creatures Inc.
