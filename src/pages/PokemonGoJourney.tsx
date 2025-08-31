@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, Filter, Search, Trophy, Star, Medal, MapPin, Circle, User, Target, Zap, Flame, Droplets, Leaf, Mountain, Ghost, Brain, Shield, Sparkles, Crown, Award, Map, Sword, Users, Camera, Heart, Gift, School, Swimming, Flower, Dumbbell, Bird, Bug, Train, Fire, Guitar, Eye, Skateboard, Wand, Route, Building, Car, Plane, Ship, Bike, Sun, Moon, Camera as CameraIcon, Heart as HeartIcon, Gift as GiftIcon, School as SchoolIcon, Swimming as SwimmingIcon, Flower as FlowerIcon, Dumbbell as DumbbellIcon, Bird as BirdIcon, Bug as BugIcon, Train as TrainIcon, Fire as FireIcon, Guitar as GuitarIcon, Eye as EyeIcon, Skateboard as SkateboardIcon, Wand as WandIcon, Route as RouteIcon, Building as BuildingIcon, Car as CarIcon, Plane as PlaneIcon, Ship as ShipIcon, Bike as BikeIcon } from "lucide-react";
+import { ArrowLeft, Filter, Search, Trophy, Star, Medal, MapPin, Circle, User, Target, Zap, Flame, Droplets, Leaf, Mountain, Ghost, Brain, Shield, Sparkles, Crown, Award, Map, Sword, Users, Camera, Heart, Gift, School, Swimming, Flower, Dumbbell, Bird, Bug, Train, Fire, Guitar, Eye, Skateboard, Wand, Route, Building, Car, Plane, Ship, Bike, Sun, Moon, Camera as CameraIcon, Heart as HeartIcon, Gift as GiftIcon, School as SchoolIcon, Swimming as SwimmingIcon, Flower as FlowerIcon, Dumbbell as DumbbellIcon, Bird as BirdIcon, Bug as BugIcon, Train as TrainIcon, Fire as FireIcon, Guitar as GuitarIcon, Eye as EyeIcon, Skateboard as SkateboardIcon, Wand as WandIcon, Route as RouteIcon, Building as BuildingIcon, Car as CarIcon, Plane as PlaneIcon, Ship as ShipIcon, Bike as BikeIcon, Calendar, Zap as ZapIcon } from "lucide-react";
 import pokemonCollection, { Pokemon } from "@/data/pokemonCollection";
 
 // Comment block for easy Pokémon data entry
@@ -22,6 +22,8 @@ First Pokémon Caught: Charmander
 Total Pokémon Owned: 840
 Legendary Pokémon: 106
 Shiny Pokémon: 265
+Event Pokémon: 60
+Rare Pokémon: 80
 */
 
 // Using the comprehensive 840 Pokémon collection
@@ -33,6 +35,8 @@ export default function PokemonGoJourney() {
   const [selectedRegion, setSelectedRegion] = useState<string>("all");
   const [shinyFilter, setShinyFilter] = useState<string>("all");
   const [legendaryFilter, setLegendaryFilter] = useState<string>("all");
+  const [eventFilter, setEventFilter] = useState<string>("all");
+  const [rareFilter, setRareFilter] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [showAllMedals, setShowAllMedals] = useState(false);
@@ -48,8 +52,14 @@ export default function PokemonGoJourney() {
     const matchesLegendary = legendaryFilter === "all" || 
       (legendaryFilter === "legendary" && pokemon.isLegendary) || 
       (legendaryFilter === "regular" && !pokemon.isLegendary);
+    const matchesEvent = eventFilter === "all" || 
+      (eventFilter === "event" && pokemon.isEvent) || 
+      (eventFilter === "regular" && !pokemon.isEvent);
+    const matchesRare = rareFilter === "all" || 
+      (rareFilter === "rare" && pokemon.isRare) || 
+      (rareFilter === "regular" && !pokemon.isRare);
     const matchesSearch = pokemon.name.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesType && matchesRegion && matchesShiny && matchesLegendary && matchesSearch;
+    return matchesType && matchesRegion && matchesShiny && matchesLegendary && matchesEvent && matchesRare && matchesSearch;
   });
 
   // Calculate pagination
@@ -66,6 +76,8 @@ export default function PokemonGoJourney() {
   const totalPokemon = mockPokemon.length;
   const legendaryCount = mockPokemon.filter(p => p.isLegendary).length;
   const shinyCount = mockPokemon.filter(p => p.isShiny).length;
+  const eventCount = mockPokemon.filter(p => p.isEvent).length;
+  const rareCount = mockPokemon.filter(p => p.isRare).length;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-green-50 to-yellow-50 dark:from-gray-900 dark:via-blue-900 dark:to-purple-900 relative overflow-hidden transition-colors duration-300">
@@ -356,11 +368,11 @@ export default function PokemonGoJourney() {
               <Target className="h-6 w-6 text-blue-600 dark:text-blue-400" />
               <CardTitle className="text-2xl dark:text-white">Caught Pokémon Gallery</CardTitle>
             </div>
-            <p className="text-gray-600 dark:text-gray-300">Collection Info: This is a sample of your impressive collection of 840 Pokémon, including 106 Legendary and 265 Shiny variants.</p>
+            <p className="text-gray-600 dark:text-gray-300">Collection Info: This is a sample of your impressive collection of 840 Pokémon, including 106 Legendary, 265 Shiny, 60 Event, and 80 Rare variants.</p>
           </CardHeader>
           <CardContent>
             {/* Summary Stats */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 mb-4 sm:mb-6 p-2 sm:p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-4 mb-4 sm:mb-6 p-2 sm:p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
               <div className="text-center p-2 sm:p-0">
                 <p className="text-lg sm:text-xl lg:text-2xl font-bold text-blue-600 dark:text-blue-400 leading-tight">{totalPokemon.toLocaleString()}</p>
                 <p className="text-xs text-gray-600 dark:text-gray-300 leading-tight">Total Owned</p>
@@ -372,6 +384,14 @@ export default function PokemonGoJourney() {
               <div className="text-center p-2 sm:p-0">
                 <p className="text-lg sm:text-xl lg:text-2xl font-bold text-purple-600 dark:text-purple-400 leading-tight">{shinyCount.toLocaleString()}</p>
                 <p className="text-xs text-gray-600 dark:text-gray-300 leading-tight">Shiny</p>
+              </div>
+              <div className="text-center p-2 sm:p-0">
+                <p className="text-lg sm:text-xl lg:text-2xl font-bold text-orange-600 dark:text-orange-400 leading-tight">{eventCount.toLocaleString()}</p>
+                <p className="text-xs text-gray-600 dark:text-gray-300 leading-tight">Event</p>
+              </div>
+              <div className="text-center p-2 sm:p-0">
+                <p className="text-lg sm:text-xl lg:text-2xl font-bold text-red-600 dark:text-red-400 leading-tight">{rareCount.toLocaleString()}</p>
+                <p className="text-xs text-gray-600 dark:text-gray-300 leading-tight">Rare</p>
               </div>
               <div className="text-center p-2 sm:p-0">
                 <p className="text-lg sm:text-xl lg:text-2xl font-bold text-green-600 dark:text-green-400 leading-tight">10.5M</p>
@@ -435,6 +455,32 @@ export default function PokemonGoJourney() {
                   </SelectContent>
                 </Select>
               </div>
+              <div className="flex items-center gap-2">
+                <Calendar className="h-4 w-4 text-orange-500" />
+                <Select value={eventFilter} onValueChange={setEventFilter}>
+                  <SelectTrigger className="w-full sm:w-32">
+                    <SelectValue placeholder="Event" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Pokémon</SelectItem>
+                    <SelectItem value="event">Event Only</SelectItem>
+                    <SelectItem value="regular">Regular Only</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex items-center gap-2">
+                <ZapIcon className="h-4 w-4 text-red-500" />
+                <Select value={rareFilter} onValueChange={setRareFilter}>
+                  <SelectTrigger className="w-full sm:w-32">
+                    <SelectValue placeholder="Rare" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Pokémon</SelectItem>
+                    <SelectItem value="rare">Rare Only</SelectItem>
+                    <SelectItem value="regular">Regular Only</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
               <div className="flex items-center gap-2 w-full">
                 <Search className="h-4 w-4 text-gray-500 flex-shrink-0" />
                 <Input
@@ -456,20 +502,38 @@ export default function PokemonGoJourney() {
                         src={pokemon.image}
                         alt={pokemon.name}
                         className="w-full h-24 object-contain mb-2"
+                        onError={(e) => {
+                          // Fallback to a placeholder if image fails to load
+                          e.currentTarget.src = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png";
+                        }}
                       />
+                      {/* Legendary indicator */}
                       {pokemon.isLegendary && (
                         <div className="absolute top-0 right-0">
                           <Crown className="h-4 w-4 text-yellow-500" />
                         </div>
                       )}
+                      {/* Shiny indicator */}
                       {pokemon.isShiny && (
                         <div className="absolute top-0 left-0">
                           <Sparkles className="h-4 w-4 text-purple-500" />
                         </div>
                       )}
+                      {/* Event indicator */}
+                      {pokemon.isEvent && (
+                        <div className="absolute top-2 right-2">
+                          <Calendar className="h-3 w-3 text-orange-500" />
+                        </div>
+                      )}
+                      {/* Rare indicator */}
+                      {pokemon.isRare && (
+                        <div className="absolute top-2 left-2">
+                          <ZapIcon className="h-3 w-3 text-red-500" />
+                        </div>
+                      )}
                     </div>
                     <div className="text-center">
-                      <h3 className="font-semibold text-sm mb-1 truncate">{pokemon.name}</h3>
+                      <h3 className="font-semibold text-sm mb-1 leading-tight min-h-[1.5rem] flex items-center justify-center">{pokemon.name}</h3>
                       <p className="text-xs text-gray-600 mb-2">CP: {pokemon.cp.toLocaleString()}</p>
                       <div className="flex flex-wrap gap-1 justify-center mb-2">
                         {pokemon.types.map((type) => (

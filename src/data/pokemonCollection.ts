@@ -8,6 +8,8 @@ export interface Pokemon {
   caughtDate: string;
   isLegendary?: boolean;
   isShiny?: boolean;
+  isEvent?: boolean;
+  isRare?: boolean;
 }
 
 // Generate 840 Pokémon with realistic data
@@ -91,6 +93,118 @@ const popularPokemon = [
   { name: "Iron Valiant", id: 1006, types: ["Fairy", "Fighting"], region: "Paldea", minCP: 5000, maxCP: 6000 }
 ];
 
+// Event Pokémon (special limited-time releases)
+const eventPokemon = [
+  { name: "Pikachu Libre", id: 25, types: ["Electric"], region: "Special Event", minCP: 1000, maxCP: 2000 },
+  { name: "Pikachu Pop Star", id: 25, types: ["Electric"], region: "Special Event", minCP: 1000, maxCP: 2000 },
+  { name: "Pikachu Rock Star", id: 25, types: ["Electric"], region: "Special Event", minCP: 1000, maxCP: 2000 },
+  { name: "Pikachu Belle", id: 25, types: ["Electric"], region: "Special Event", minCP: 1000, maxCP: 2000 },
+  { name: "Pikachu PhD", id: 25, types: ["Electric"], region: "Special Event", minCP: 1000, maxCP: 2000 },
+  { name: "Pikachu Libre", id: 25, types: ["Electric"], region: "Special Event", minCP: 1000, maxCP: 2000 },
+  { name: "Pikachu Pop Star", id: 25, types: ["Electric"], region: "Special Event", minCP: 1000, maxCP: 2000 },
+  { name: "Pikachu Rock Star", id: 25, types: ["Electric"], region: "Special Event", minCP: 1000, maxCP: 2000 },
+  { name: "Pikachu Belle", id: 25, types: ["Electric"], region: "Special Event", minCP: 1000, maxCP: 2000 },
+  { name: "Pikachu PhD", id: 25, types: ["Electric"], region: "Special Event", minCP: 1000, maxCP: 2000 },
+  { name: "Eevee Flower Crown", id: 133, types: ["Normal"], region: "Special Event", minCP: 800, maxCP: 1500 },
+  { name: "Eevee Party Hat", id: 133, types: ["Normal"], region: "Special Event", minCP: 800, maxCP: 1500 },
+  { name: "Eevee Summer Hat", id: 133, types: ["Normal"], region: "Special Event", minCP: 800, maxCP: 1500 },
+  { name: "Eevee Winter Hat", id: 133, types: ["Normal"], region: "Special Event", minCP: 800, maxCP: 1500 },
+  { name: "Eevee New Year Hat", id: 133, types: ["Normal"], region: "Special Event", minCP: 800, maxCP: 1500 },
+  { name: "Squirtle Sunglasses", id: 7, types: ["Water"], region: "Special Event", minCP: 600, maxCP: 1200 },
+  { name: "Bulbasaur Party Hat", id: 1, types: ["Grass", "Poison"], region: "Special Event", minCP: 600, maxCP: 1200 },
+  { name: "Charmander Party Hat", id: 4, types: ["Fire"], region: "Special Event", minCP: 600, maxCP: 1200 },
+  { name: "Meowth Party Hat", id: 52, types: ["Normal"], region: "Special Event", minCP: 500, maxCP: 1000 },
+  { name: "Meowth Top Hat", id: 52, types: ["Normal"], region: "Special Event", minCP: 500, maxCP: 1000 },
+  { name: "Meowth Bow Tie", id: 52, types: ["Normal"], region: "Special Event", minCP: 500, maxCP: 1000 },
+  { name: "Cubone Hat", id: 104, types: ["Ground"], region: "Special Event", minCP: 500, maxCP: 1000 },
+  { name: "Ditto Disguise", id: 132, types: ["Normal"], region: "Special Event", minCP: 500, maxCP: 1000 },
+  { name: "Ditto Transform", id: 132, types: ["Normal"], region: "Special Event", minCP: 500, maxCP: 1000 },
+  { name: "Snorlax Bow Tie", id: 143, types: ["Normal"], region: "Special Event", minCP: 2000, maxCP: 3500 },
+  { name: "Snorlax Hat", id: 143, types: ["Normal"], region: "Special Event", minCP: 2000, maxCP: 3500 },
+  { name: "Dragonite Bow Tie", id: 149, types: ["Dragon", "Flying"], region: "Special Event", minCP: 3000, maxCP: 4500 },
+  { name: "Mewtwo Armor", id: 150, types: ["Psychic"], region: "Special Event", minCP: 4000, maxCP: 5000 },
+  { name: "Mewtwo Armored", id: 150, types: ["Psychic", "Steel"], region: "Special Event", minCP: 4000, maxCP: 5000 },
+  { name: "Mewtwo Shadow", id: 150, types: ["Psychic"], region: "Special Event", minCP: 4000, maxCP: 5000 },
+  { name: "Mewtwo Purified", id: 150, types: ["Psychic"], region: "Special Event", minCP: 4000, maxCP: 5000 },
+  { name: "Mew Armor", id: 151, types: ["Psychic"], region: "Special Event", minCP: 3000, maxCP: 4000 },
+  { name: "Mew Shadow", id: 151, types: ["Psychic"], region: "Special Event", minCP: 3000, maxCP: 4000 },
+  { name: "Mew Purified", id: 151, types: ["Psychic"], region: "Special Event", minCP: 3000, maxCP: 4000 }
+];
+
+// Rare Pokémon (hard to find, low spawn rates)
+const rarePokemon = [
+  { name: "Unown A", id: 201, types: ["Psychic"], region: "Johto", minCP: 500, maxCP: 1000 },
+  { name: "Unown B", id: 201, types: ["Psychic"], region: "Johto", minCP: 500, maxCP: 1000 },
+  { name: "Unown C", id: 201, types: ["Psychic"], region: "Johto", minCP: 500, maxCP: 1000 },
+  { name: "Unown D", id: 201, types: ["Psychic"], region: "Johto", minCP: 500, maxCP: 1000 },
+  { name: "Unown E", id: 201, types: ["Psychic"], region: "Johto", minCP: 500, maxCP: 1000 },
+  { name: "Unown F", id: 201, types: ["Psychic"], region: "Johto", minCP: 500, maxCP: 1000 },
+  { name: "Unown G", id: 201, types: ["Psychic"], region: "Johto", minCP: 500, maxCP: 1000 },
+  { name: "Unown H", id: 201, types: ["Psychic"], region: "Johto", minCP: 500, maxCP: 1000 },
+  { name: "Unown I", id: 201, types: ["Psychic"], region: "Johto", minCP: 500, maxCP: 1000 },
+  { name: "Unown J", id: 201, types: ["Psychic"], region: "Johto", minCP: 500, maxCP: 1000 },
+  { name: "Unown K", id: 201, types: ["Psychic"], region: "Johto", minCP: 500, maxCP: 1000 },
+  { name: "Unown L", id: 201, types: ["Psychic"], region: "Johto", minCP: 500, maxCP: 1000 },
+  { name: "Unown M", id: 201, types: ["Psychic"], region: "Johto", minCP: 500, maxCP: 1000 },
+  { name: "Unown N", id: 201, types: ["Psychic"], region: "Johto", minCP: 500, maxCP: 1000 },
+  { name: "Unown O", id: 201, types: ["Psychic"], region: "Johto", minCP: 500, maxCP: 1000 },
+  { name: "Unown P", id: 201, types: ["Psychic"], region: "Johto", minCP: 500, maxCP: 1000 },
+  { name: "Unown Q", id: 201, types: ["Psychic"], region: "Johto", minCP: 500, maxCP: 1000 },
+  { name: "Unown R", id: 201, types: ["Psychic"], region: "Johto", minCP: 500, maxCP: 1000 },
+  { name: "Unown S", id: 201, types: ["Psychic"], region: "Johto", minCP: 500, maxCP: 1000 },
+  { name: "Unown T", id: 201, types: ["Psychic"], region: "Johto", minCP: 500, maxCP: 1000 },
+  { name: "Unown U", id: 201, types: ["Psychic"], region: "Johto", minCP: 500, maxCP: 1000 },
+  { name: "Unown V", id: 201, types: ["Psychic"], region: "Johto", minCP: 500, maxCP: 1000 },
+  { name: "Unown W", id: 201, types: ["Psychic"], region: "Johto", minCP: 500, maxCP: 1000 },
+  { name: "Unown X", id: 201, types: ["Psychic"], region: "Johto", minCP: 500, maxCP: 1000 },
+  { name: "Unown Y", id: 201, types: ["Psychic"], region: "Johto", minCP: 500, maxCP: 1000 },
+  { name: "Unown Z", id: 201, types: ["Psychic"], region: "Johto", minCP: 500, maxCP: 1000 },
+  { name: "Unown !", id: 201, types: ["Psychic"], region: "Johto", minCP: 500, maxCP: 1000 },
+  { name: "Unown ?", id: 201, types: ["Psychic"], region: "Johto", minCP: 500, maxCP: 1000 },
+  { name: "Spinda Spot 1", id: 327, types: ["Normal"], region: "Hoenn", minCP: 800, maxCP: 1500 },
+  { name: "Spinda Spot 2", id: 327, types: ["Normal"], region: "Hoenn", minCP: 800, maxCP: 1500 },
+  { name: "Spinda Spot 3", id: 327, types: ["Normal"], region: "Hoenn", minCP: 800, maxCP: 1500 },
+  { name: "Spinda Spot 4", id: 327, types: ["Normal"], region: "Hoenn", minCP: 800, maxCP: 1500 },
+  { name: "Spinda Spot 5", id: 327, types: ["Normal"], region: "Hoenn", minCP: 800, maxCP: 1500 },
+  { name: "Spinda Spot 6", id: 327, types: ["Normal"], region: "Hoenn", minCP: 800, maxCP: 1500 },
+  { name: "Spinda Spot 7", id: 327, types: ["Normal"], region: "Hoenn", minCP: 800, maxCP: 1500 },
+  { name: "Spinda Spot 8", id: 327, types: ["Normal"], region: "Hoenn", minCP: 800, maxCP: 1500 },
+  { name: "Spinda Spot 9", id: 327, types: ["Normal"], region: "Hoenn", minCP: 800, maxCP: 1500 },
+  { name: "Spinda Spot 10", id: 327, types: ["Normal"], region: "Hoenn", minCP: 800, maxCP: 1500 },
+  { name: "Deoxys Attack", id: 386, types: ["Psychic"], region: "Hoenn", minCP: 3000, maxCP: 4000 },
+  { name: "Deoxys Defense", id: 386, types: ["Psychic"], region: "Hoenn", minCP: 3000, maxCP: 4000 },
+  { name: "Deoxys Speed", id: 386, types: ["Psychic"], region: "Hoenn", minCP: 3000, maxCP: 4000 },
+  { name: "Deoxys Normal", id: 386, types: ["Psychic"], region: "Hoenn", minCP: 3000, maxCP: 4000 },
+  { name: "Castform Sunny", id: 351, types: ["Fire"], region: "Hoenn", minCP: 800, maxCP: 1500 },
+  { name: "Castform Rainy", id: 351, types: ["Water"], region: "Hoenn", minCP: 800, maxCP: 1500 },
+  { name: "Castform Snowy", id: 351, types: ["Ice"], region: "Hoenn", minCP: 800, maxCP: 1500 },
+  { name: "Castform Normal", id: 351, types: ["Normal"], region: "Hoenn", minCP: 800, maxCP: 1500 },
+  { name: "Cherrim Sunny", id: 421, types: ["Grass"], region: "Sinnoh", minCP: 1000, maxCP: 1800 },
+  { name: "Cherrim Overcast", id: 421, types: ["Grass"], region: "Sinnoh", minCP: 1000, maxCP: 1800 },
+  { name: "Giratina Altered", id: 487, types: ["Ghost", "Dragon"], region: "Sinnoh", minCP: 4000, maxCP: 5500 },
+  { name: "Giratina Origin", id: 487, types: ["Ghost", "Dragon"], region: "Sinnoh", minCP: 4000, maxCP: 5500 },
+  { name: "Shaymin Land", id: 492, types: ["Grass"], region: "Sinnoh", minCP: 3000, maxCP: 4000 },
+  { name: "Shaymin Sky", id: 492, types: ["Grass", "Flying"], region: "Sinnoh", minCP: 3000, maxCP: 4000 },
+  { name: "Arceus Normal", id: 493, types: ["Normal"], region: "Sinnoh", minCP: 5000, maxCP: 6000 },
+  { name: "Arceus Fire", id: 493, types: ["Fire"], region: "Sinnoh", minCP: 5000, maxCP: 6000 },
+  { name: "Arceus Water", id: 493, types: ["Water"], region: "Sinnoh", minCP: 5000, maxCP: 6000 },
+  { name: "Arceus Electric", id: 493, types: ["Electric"], region: "Sinnoh", minCP: 5000, maxCP: 6000 },
+  { name: "Arceus Grass", id: 493, types: ["Grass"], region: "Sinnoh", minCP: 5000, maxCP: 6000 },
+  { name: "Arceus Ice", id: 493, types: ["Ice"], region: "Sinnoh", minCP: 5000, maxCP: 6000 },
+  { name: "Arceus Fighting", id: 493, types: ["Fighting"], region: "Sinnoh", minCP: 5000, maxCP: 6000 },
+  { name: "Arceus Poison", id: 493, types: ["Poison"], region: "Sinnoh", minCP: 5000, maxCP: 6000 },
+  { name: "Arceus Ground", id: 493, types: ["Ground"], region: "Sinnoh", minCP: 5000, maxCP: 6000 },
+  { name: "Arceus Flying", id: 493, types: ["Flying"], region: "Sinnoh", minCP: 5000, maxCP: 6000 },
+  { name: "Arceus Psychic", id: 493, types: ["Psychic"], region: "Sinnoh", minCP: 5000, maxCP: 6000 },
+  { name: "Arceus Bug", id: 493, types: ["Bug"], region: "Sinnoh", minCP: 5000, maxCP: 6000 },
+  { name: "Arceus Rock", id: 493, types: ["Rock"], region: "Sinnoh", minCP: 5000, maxCP: 6000 },
+  { name: "Arceus Ghost", id: 493, types: ["Ghost"], region: "Sinnoh", minCP: 5000, maxCP: 6000 },
+  { name: "Arceus Dragon", id: 493, types: ["Dragon"], region: "Sinnoh", minCP: 5000, maxCP: 6000 },
+  { name: "Arceus Dark", id: 493, types: ["Dark"], region: "Sinnoh", minCP: 5000, maxCP: 6000 },
+  { name: "Arceus Steel", id: 493, types: ["Steel"], region: "Sinnoh", minCP: 5000, maxCP: 6000 },
+  { name: "Arceus Fairy", id: 493, types: ["Fairy"], region: "Sinnoh", minCP: 5000, maxCP: 6000 }
+];
+
 // Generate the complete collection
 let pokemonId = 1;
 
@@ -152,6 +266,72 @@ popularPokemon.forEach((pokemon) => {
       caughtDate: randomDate(),
       isLegendary: false,
       isShiny: true
+    });
+  }
+});
+
+// Add Event Pokémon (regular and shiny variants)
+eventPokemon.forEach((pokemon) => {
+  // Add regular event
+  pokemonCollection.push({
+    id: pokemonId++,
+    name: pokemon.name,
+    image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`,
+    cp: randomCP(pokemon.minCP, pokemon.maxCP),
+    types: pokemon.types,
+    region: pokemon.region,
+    caughtDate: randomDate(),
+    isLegendary: false,
+    isShiny: false,
+    isEvent: true
+  });
+  
+  // Add shiny event (if we have room)
+  if (pokemonId <= 840) {
+    pokemonCollection.push({
+      id: pokemonId++,
+      name: `Shiny ${pokemon.name}`,
+      image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`,
+      cp: randomCP(pokemon.minCP, pokemon.maxCP),
+      types: pokemon.types,
+      region: pokemon.region,
+      caughtDate: randomDate(),
+      isLegendary: false,
+      isShiny: true,
+      isEvent: true
+    });
+  }
+});
+
+// Add Rare Pokémon (regular and shiny variants)
+rarePokemon.forEach((pokemon) => {
+  // Add regular rare
+  pokemonCollection.push({
+    id: pokemonId++,
+    name: pokemon.name,
+    image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`,
+    cp: randomCP(pokemon.minCP, pokemon.maxCP),
+    types: pokemon.types,
+    region: pokemon.region,
+    caughtDate: randomDate(),
+    isLegendary: false,
+    isShiny: false,
+    isRare: true
+  });
+  
+  // Add shiny rare (if we have room)
+  if (pokemonId <= 840) {
+    pokemonCollection.push({
+      id: pokemonId++,
+      name: `Shiny ${pokemon.name}`,
+      image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`,
+      cp: randomCP(pokemon.minCP, pokemon.maxCP),
+      types: pokemon.types,
+      region: pokemon.region,
+      caughtDate: randomDate(),
+      isLegendary: false,
+      isShiny: true,
+      isRare: true
     });
   }
 });
