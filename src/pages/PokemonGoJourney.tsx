@@ -115,8 +115,10 @@ export default function PokemonGoJourney() {
     }
   };
 
-  const removePokemonFromTeam = (pokemonId: number) => {
-    setSelectedPokemon(selectedPokemon.filter(p => p.id !== pokemonId));
+  const removePokemonFromTeam = (slotIndex: number) => {
+    const newTeam = [...selectedPokemon];
+    newTeam.splice(slotIndex, 1);
+    setSelectedPokemon(newTeam);
   };
 
   const simulateBattle = () => {
@@ -924,12 +926,12 @@ export default function PokemonGoJourney() {
               <Play className="h-6 w-6 text-purple-600 dark:text-purple-400" />
               <CardTitle className="text-2xl text-gray-800 dark:text-white">Battle Simulator</CardTitle>
             </div>
-            <p className="text-gray-600 dark:text-gray-300">Choose 3 Pokémon (can be the same Pokémon multiple times) and see how my team would win against yours!</p>
+                            <p className="text-gray-600 dark:text-gray-300">Choose 3 Pokémon (can be the same Pokémon multiple times) and see how my team would win against yours!</p>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Team Selection */}
             <div>
-              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">Your Team Selection (Can Include Duplicates)</h3>
+                             <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">Your Team Selection (Can Include Duplicates)</h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
                 {[0, 1, 2].map((slot) => (
                   <div key={slot} className="min-h-[120px] border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg flex items-center justify-center bg-gray-50 dark:bg-gray-800">
@@ -940,12 +942,19 @@ export default function PokemonGoJourney() {
                           alt={selectedPokemon[slot].name} 
                           className="w-16 h-16 mx-auto mb-2 object-contain"
                         />
-                        <p className="text-sm font-semibold text-gray-800 dark:text-white">{selectedPokemon[slot].name}</p>
+                        <p className="text-sm font-semibold text-gray-800 dark:text-white">
+                          {selectedPokemon[slot].name}
+                          {selectedPokemon.filter(p => p.id === selectedPokemon[slot].id).length > 1 && (
+                            <span className="ml-1 text-xs bg-blue-500 text-white px-1.5 py-0.5 rounded-full">
+                              x{selectedPokemon.filter(p => p.id === selectedPokemon[slot].id).length}
+                            </span>
+                          )}
+                        </p>
                         <p className="text-xs text-gray-600 dark:text-gray-300">CP: {selectedPokemon[slot].cp.toLocaleString()}</p>
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => removePokemonFromTeam(selectedPokemon[slot].id)}
+                          onClick={() => removePokemonFromTeam(slot)}
                           className="mt-1 text-xs"
                         >
                           Remove
