@@ -1029,27 +1029,89 @@ export default function PokemonGoJourney() {
               </div>
             )}
 
-            {/* Quick Add Pokémon */}
+            {/* Pokémon Selector */}
             <div>
-              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">Quick Add Pokémon</h3>
-              <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-2">
-                {favoritePokemon.slice(0, 6).map((pokemon) => (
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">Select Any Pokémon</h3>
+              
+              {/* Search and Filters */}
+              <div className="mb-4 space-y-3">
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <Input
+                    placeholder="Search Pokémon by name..."
+                    className="flex-1"
+                    onChange={(e) => {
+                      const searchTerm = e.target.value.toLowerCase();
+                      const filtered = mockPokemon.filter(p => 
+                        p.name.toLowerCase().includes(searchTerm)
+                      );
+                      // You can add state for filtered results if needed
+                    }}
+                  />
+                  <Select onValueChange={(value) => {
+                    // Filter by type
+                    const filtered = value === "all" ? mockPokemon : mockPokemon.filter(p => 
+                      p.types.includes(value)
+                    );
+                    // You can add state for filtered results if needed
+                  }}>
+                    <SelectTrigger className="w-32">
+                      <SelectValue placeholder="Type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Types</SelectItem>
+                      {allTypes.map((type) => (
+                        <SelectItem key={type} value={type}>{type}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              {/* Pokémon Grid */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-2 max-h-96 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-gray-50 dark:bg-gray-800">
+                {mockPokemon.map((pokemon) => (
                   <Button
                     key={pokemon.id}
                     variant="outline"
                     onClick={() => addPokemonToTeam(pokemon)}
                     disabled={selectedPokemon.length >= 3 || selectedPokemon.find(p => p.id === pokemon.id)}
-                    className="h-auto p-2 flex flex-col items-center gap-1 text-xs"
+                    className="h-auto p-2 flex flex-col items-center gap-1 text-xs hover:scale-105 transition-transform"
                   >
-                    <img 
-                      src={pokemon.image} 
-                      alt={pokemon.name} 
-                      className="w-8 h-8 object-contain"
-                    />
-                    <span className="text-xs">{pokemon.name}</span>
+                    <div className="relative">
+                      <img 
+                        src={pokemon.image} 
+                        alt={pokemon.name} 
+                        className="w-8 h-8 object-contain"
+                        onError={(e) => {
+                          e.currentTarget.src = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png";
+                        }}
+                      />
+                      {/* Indicators */}
+                      {pokemon.isLegendary && (
+                        <Crown className="absolute -top-1 -right-1 h-3 w-3 text-yellow-500" />
+                      )}
+                      {pokemon.isShiny && (
+                        <Sparkles className="absolute -top-1 -left-1 h-3 w-3 text-purple-500" />
+                      )}
+                      {pokemon.isEvent && (
+                        <Calendar className="absolute -bottom-1 -right-1 h-3 w-3 text-orange-500" />
+                      )}
+                      {pokemon.isRare && (
+                        <ZapIcon className="absolute -bottom-1 -left-1 h-3 w-3 text-red-500" />
+                      )}
+                      {pokemon.isMighty && (
+                        <SwordIcon className="absolute top-1/2 -right-1 h-3 w-3 text-purple-500 transform -translate-y-1/2" />
+                      )}
+                    </div>
+                    <span className="text-xs truncate max-w-full">{pokemon.name}</span>
+                    <span className="text-xs text-gray-500">CP: {pokemon.cp.toLocaleString()}</span>
                   </Button>
                 ))}
               </div>
+              
+              <p className="text-xs text-gray-500 mt-2 text-center">
+                Showing all {mockPokemon.length} Pokémon from your collection
+              </p>
             </div>
           </CardContent>
         </Card>
