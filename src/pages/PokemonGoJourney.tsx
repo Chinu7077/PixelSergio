@@ -214,15 +214,24 @@ export default function PokemonGoJourney() {
           cp: p.cp
         }));
         
+        // Make sure opponent team has all required properties
+        const opponentTeam = opponent.map(p => ({
+          name: p.name,
+          types: p.types,
+          cp: p.cp,
+          image: p.image
+        }));
+        
         const battleResultData = {
           myTeam,
-          opponentTeam: opponent,
+          opponentTeam: opponentTeam,
           battleLog: battleSteps,
           victory: true
         };
         
         // Debug logging
         console.log('Setting Battle Result:', battleResultData);
+        console.log('Opponent Team Details:', opponentTeam);
         
         setBattleResult(battleResultData);
         setIsBattling(false);
@@ -1348,16 +1357,23 @@ export default function PokemonGoJourney() {
                               src={pokemon.image} 
                               alt={pokemon.name} 
                               className="w-12 h-12 mx-auto mb-2 object-contain"
+                              onError={(e) => {
+                                e.currentTarget.src = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png";
+                              }}
                             />
-                            <p className="font-semibold text-red-800 dark:text-red-400 text-center">{pokemon.name}</p>
+                            <p className="font-semibold text-red-800 dark:text-red-400 text-center">
+                              {pokemon.name || 'Unknown Pokémon'}
+                            </p>
                             <div className="flex justify-center gap-1 mb-1">
-                              {pokemon.types.map((type, typeIndex) => (
+                              {pokemon.types && pokemon.types.map((type, typeIndex) => (
                                 <Badge key={typeIndex} variant="secondary" className="text-xs">
                                   {type}
                                 </Badge>
                               ))}
                             </div>
-                            <p className="text-sm text-gray-600 dark:text-gray-300 text-center">CP: {pokemon.cp.toLocaleString()}</p>
+                            <p className="text-sm text-gray-600 dark:text-gray-300 text-center">
+                              CP: {pokemon.cp ? pokemon.cp.toLocaleString() : 'Unknown'}
+                            </p>
                           </div>
                         ))}
                       </div>
@@ -1365,6 +1381,9 @@ export default function PokemonGoJourney() {
                       <div className="p-4 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-700">
                         <p className="text-red-600 dark:text-red-400 text-center">
                           Opponent team data not available
+                        </p>
+                        <p className="text-xs text-red-500 dark:text-red-400 text-center mt-1">
+                          Debug: opponentTeam = {JSON.stringify(battleResult.opponentTeam)}
                         </p>
                       </div>
                     )}
