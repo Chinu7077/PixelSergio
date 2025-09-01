@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, Filter, Search, Trophy, Star, Medal, MapPin, Circle, User, Target, Zap, Flame, Droplets, Leaf, Mountain, Ghost, Brain, Shield, Sparkles, Crown, Award, Map, Sword, Users, Camera, Heart, Gift, School, Swimming, Flower, Dumbbell, Bird, Bug, Train, Fire, Guitar, Eye, Skateboard, Wand, Route, Building, Car, Plane, Ship, Bike, Sun, Moon, Camera as CameraIcon, Heart as HeartIcon, Gift as GiftIcon, School as SchoolIcon, Swimming as SwimmingIcon, Flower as FlowerIcon, Dumbbell as DumbbellIcon, Bird as BirdIcon, Bug as BugIcon, Train as TrainIcon, Fire as FireIcon, Guitar as GuitarIcon, Eye as EyeIcon, Skateboard as SkateboardIcon, Wand as WandIcon, Route as RouteIcon, Building as BuildingIcon, Car as CarIcon, Plane as PlaneIcon, Ship as ShipIcon, Bike as BikeIcon, Calendar, Zap as ZapIcon, Sword as SwordIcon, Play, Zap as ZapIcon2 } from "lucide-react";
+import { ArrowLeft, Filter, Search, Trophy, Star, Medal, MapPin, Circle, User, Target, Zap, Flame, Droplets, Leaf, Mountain, Ghost, Brain, Shield, Sparkles, Crown, Award, Map, Sword, Users, Camera, Heart, Gift, School, Swimming, Flower, Dumbbell, Bird, Bug, Train, Fire, Guitar, Eye, Skateboard, Wand, Route, Building, Car, Plane, Ship, Bike, Sun, Moon, Camera as CameraIcon, Heart as HeartIcon, Gift as GiftIcon, School as SchoolIcon, Swimming as SwimmingIcon, Flower as FlowerIcon, Dumbbell as DumbbellIcon, Bird as BirdIcon, Bug as BugIcon, Train as TrainIcon, Fire as FireIcon, Guitar as GuitarIcon, Eye as EyeIcon, Skateboard as SkateboardIcon, Wand as WandIcon, Route as RouteIcon, Building as BuildingIcon, Car as CarIcon, Plane as PlaneIcon, Ship as ShipIcon, Bike as BikeIcon, Calendar, Zap as ZapIcon, Sword as SwordIcon, Play, Zap as ZapIcon2, RefreshCw } from "lucide-react";
 import pokemonCollection, { Pokemon } from "@/data/pokemonCollection";
 
 // Comment block for easy Pokémon data entry
@@ -924,12 +924,12 @@ export default function PokemonGoJourney() {
               <Play className="h-6 w-6 text-purple-600 dark:text-purple-400" />
               <CardTitle className="text-2xl text-gray-800 dark:text-white">Battle Simulator</CardTitle>
             </div>
-            <p className="text-gray-600 dark:text-gray-300">Choose 3 Pokémon and see how my team would win against yours!</p>
+            <p className="text-gray-600 dark:text-gray-300">Choose 3 Pokémon (can be the same Pokémon multiple times) and see how my team would win against yours!</p>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Team Selection */}
             <div>
-              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">Your Team Selection</h3>
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">Your Team Selection (Can Include Duplicates)</h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
                 {[0, 1, 2].map((slot) => (
                   <div key={slot} className="min-h-[120px] border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg flex items-center justify-center bg-gray-50 dark:bg-gray-800">
@@ -1026,12 +1026,27 @@ export default function PokemonGoJourney() {
                     ))}
                   </div>
                 </div>
+                
+                {/* Play Again Button */}
+                <div className="mt-4 text-center">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => {
+                      setBattleResult(null);
+                      setSelectedPokemon([]);
+                    }}
+                    className="border-green-300 dark:border-green-600 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20"
+                  >
+                    <RefreshCw className="h-4 w-4 mr-2" />
+                    Play Again
+                  </Button>
+                </div>
               </div>
             )}
 
-            {/* Pokémon Selector */}
+            {/* Single Pokémon Selector */}
             <div>
-              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">Select Any Pokémon</h3>
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">Single Pokémon Selector</h3>
               
               {/* Search and Filters */}
               <div className="mb-4 space-y-3">
@@ -1039,21 +1054,10 @@ export default function PokemonGoJourney() {
                   <Input
                     placeholder="Search Pokémon by name..."
                     className="flex-1"
-                    onChange={(e) => {
-                      const searchTerm = e.target.value.toLowerCase();
-                      const filtered = mockPokemon.filter(p => 
-                        p.name.toLowerCase().includes(searchTerm)
-                      );
-                      // You can add state for filtered results if needed
-                    }}
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                   />
-                  <Select onValueChange={(value) => {
-                    // Filter by type
-                    const filtered = value === "all" ? mockPokemon : mockPokemon.filter(p => 
-                      p.types.includes(value)
-                    );
-                    // You can add state for filtered results if needed
-                  }}>
+                  <Select value={selectedType} onValueChange={setSelectedType}>
                     <SelectTrigger className="w-32">
                       <SelectValue placeholder="Type" />
                     </SelectTrigger>
@@ -1064,17 +1068,82 @@ export default function PokemonGoJourney() {
                       ))}
                     </SelectContent>
                   </Select>
+                  <Select value={selectedRegion} onValueChange={setSelectedRegion}>
+                    <SelectTrigger className="w-32">
+                      <SelectValue placeholder="Region" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Regions</SelectItem>
+                      {allRegions.map((region) => (
+                        <SelectItem key={region} value={region}>{region}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                {/* Additional Filters */}
+                <div className="flex flex-wrap gap-2">
+                  <Select value={shinyFilter} onValueChange={setShinyFilter}>
+                    <SelectTrigger className="w-28">
+                      <SelectValue placeholder="Shiny" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Shiny</SelectItem>
+                      <SelectItem value="shiny">Shiny Only</SelectItem>
+                      <SelectItem value="regular">Regular Only</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Select value={legendaryFilter} onValueChange={setLegendaryFilter}>
+                    <SelectTrigger className="w-28">
+                      <SelectValue placeholder="Legendary" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Legendary</SelectItem>
+                      <SelectItem value="legendary">Legendary Only</SelectItem>
+                      <SelectItem value="regular">Regular Only</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Select value={eventFilter} onValueChange={setEventFilter}>
+                    <SelectTrigger className="w-28">
+                      <SelectValue placeholder="Event" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Event</SelectItem>
+                      <SelectItem value="event">Event Only</SelectItem>
+                      <SelectItem value="regular">Regular Only</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Select value={rareFilter} onValueChange={setRareFilter}>
+                    <SelectTrigger className="w-28">
+                      <SelectValue placeholder="Rare" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Rare</SelectItem>
+                      <SelectItem value="rare">Rare Only</SelectItem>
+                      <SelectItem value="regular">Regular Only</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Select value={mightyFilter} onValueChange={setMightyFilter}>
+                    <SelectTrigger className="w-28">
+                      <SelectValue placeholder="Mighty" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Mighty</SelectItem>
+                      <SelectItem value="mighty">Mighty Only</SelectItem>
+                      <SelectItem value="regular">Regular Only</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 
-              {/* Pokémon Grid */}
+              {/* Filtered Pokémon Grid */}
               <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-2 max-h-96 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-gray-50 dark:bg-gray-800">
-                {mockPokemon.map((pokemon) => (
+                {currentPokemon.map((pokemon) => (
                   <Button
                     key={pokemon.id}
                     variant="outline"
                     onClick={() => addPokemonToTeam(pokemon)}
-                    disabled={selectedPokemon.length >= 3 || selectedPokemon.find(p => p.id === pokemon.id)}
+                    disabled={selectedPokemon.length >= 3}
                     className="h-auto p-2 flex flex-col items-center gap-1 text-xs hover:scale-105 transition-transform"
                   >
                     <div className="relative">
@@ -1109,8 +1178,33 @@ export default function PokemonGoJourney() {
                 ))}
               </div>
               
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="mt-4 flex justify-center items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                    disabled={currentPage === 1}
+                  >
+                    Previous
+                  </Button>
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                    Page {currentPage} of {totalPages}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                    disabled={currentPage === totalPages}
+                  >
+                    Next
+                  </Button>
+                </div>
+              )}
+              
               <p className="text-xs text-gray-500 mt-2 text-center">
-                Showing all {mockPokemon.length} Pokémon from your collection
+                Showing {filteredPokemon.length} of {mockPokemon.length} Pokémon from your collection
               </p>
             </div>
           </CardContent>
