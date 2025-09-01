@@ -97,6 +97,12 @@ export default function PokemonGoJourney() {
   const lastYearCatches = mockPokemon.filter(p => new Date(p.caughtDate).getFullYear() === currentYear - 1).length;
   const recentCatches = mockPokemon.filter(p => new Date(p.caughtDate) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)).length;
 
+  // Favorite Pokémon selection (pulls from your collection; supports shiny variants)
+  const favoriteNames = ["Dragonite", "Metagross", "Garchomp", "Melmetal", "Togekiss", "Lucario"];
+  const favoritePokemon: Pokemon[] = favoriteNames
+    .map((name) => mockPokemon.find(p => p.name === name || p.name.endsWith(` ${name}`)))
+    .filter((p): p is Pokemon => Boolean(p));
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-green-50 to-yellow-50 dark:from-gray-900 dark:via-blue-900 dark:to-purple-900 relative overflow-hidden transition-colors duration-300">
       {/* Background Map Pattern */}
@@ -689,6 +695,93 @@ export default function PokemonGoJourney() {
                 </div>
               </div>
             )}
+          </CardContent>
+        </Card>
+
+        {/* My Favorite Pokémon & Battle Suggestions */}
+        <Card className="mt-8 bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 border border-indigo-100 dark:border-gray-700 shadow-xl">
+          <CardHeader className="pb-4">
+            <div className="flex items-center gap-3">
+              <Heart className="h-6 w-6 text-pink-600 dark:text-pink-400" />
+              <CardTitle className="text-2xl text-gray-800 dark:text-white">My Favorite Pokémon & Battle Suggestions</CardTitle>
+            </div>
+            <p className="text-gray-600 dark:text-gray-300">A curated set of favorites and practical team ideas for Gyms and GO Battle League.</p>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Favorites Grid */}
+            <div>
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">Favorite Pokémon</h3>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+                {favoritePokemon.map(fp => (
+                  <Card key={`fav-${fp.id}`} className="bg-white/70 dark:bg-gray-800/70 border border-gray-200 dark:border-gray-700">
+                    <CardContent className="p-3 text-center">
+                      <div className="relative">
+                        <img src={fp.image} alt={fp.name} className="w-full h-20 object-contain mb-2" />
+                        {fp.isShiny && (
+                          <div className="absolute top-0 left-0">
+                            <Sparkles className="h-4 w-4 text-purple-500" />
+                          </div>
+                        )}
+                        {fp.isLegendary && (
+                          <div className="absolute top-0 right-0">
+                            <Crown className="h-4 w-4 text-yellow-500" />
+                          </div>
+                        )}
+                      </div>
+                      <div className="text-sm font-semibold text-gray-800 dark:text-white">{fp.name}</div>
+                      <div className="text-xs text-gray-600 dark:text-gray-300 mb-2">CP {fp.cp.toLocaleString()}</div>
+                      <div className="flex flex-wrap gap-1 justify-center">
+                        {fp.types.map(t => (
+                          <Badge key={`${fp.id}-${t}`} variant="secondary" className="text-[10px]">{t}</Badge>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+
+            {/* Suggestions for Gym Battles */}
+            <div>
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3 flex items-center gap-2">
+                <Sword className="h-5 w-5 text-red-600 dark:text-red-400" /> Suggestions for Gym Battles
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <div className="p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-800/70">
+                  <p className="font-semibold text-gray-800 dark:text-white">Anti-Steel Team</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">Groudon / Reshiram / Lucario</p>
+                </div>
+                <div className="p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-800/70">
+                  <p className="font-semibold text-gray-800 dark:text-white">Anti-Dragon Team</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">Togekiss / Mamoswine / Dialga</p>
+                </div>
+                <div className="p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-800/70">
+                  <p className="font-semibold text-gray-800 dark:text-white">Water Control</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">Zekrom / Zarude / Raikou</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Suggestions for GO Battle League Battles */}
+            <div>
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3 flex items-center gap-2">
+                <Shield className="h-5 w-5 text-blue-600 dark:text-blue-400" /> Suggestions for GO Battle League
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-800/70">
+                  <p className="font-semibold text-gray-800 dark:text-white">Great League</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">Medicham / Lanturn / Trevenant</p>
+                </div>
+                <div className="p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-800/70">
+                  <p className="font-semibold text-gray-800 dark:text-white">Ultra League</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">Cresselia / Registeel / Talonflame</p>
+                </div>
+                <div className="p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-800/70">
+                  <p className="font-semibold text-gray-800 dark:text-white">Master League</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">Dialga / Mewtwo / Togekiss</p>
+                </div>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
