@@ -152,6 +152,12 @@ export default function PokemonGoJourney() {
     const availablePokemon = mockPokemon.filter(p => !selectedPokemon.find(sp => sp.id === p.id));
     const shuffled = availablePokemon.sort(() => 0.5 - Math.random());
     const opponent = shuffled.slice(0, 3);
+    
+    // Debug logging
+    console.log('Available Pokémon:', availablePokemon.length);
+    console.log('Selected Pokémon:', selectedPokemon.map(p => p.name));
+    console.log('Generated Opponent Team:', opponent.map(p => p.name));
+    
     setOpponentTeam(opponent);
     return opponent;
   };
@@ -208,12 +214,17 @@ export default function PokemonGoJourney() {
           cp: p.cp
         }));
         
-        setBattleResult({
+        const battleResultData = {
           myTeam,
           opponentTeam: opponent,
           battleLog: battleSteps,
           victory: true
-        });
+        };
+        
+        // Debug logging
+        console.log('Setting Battle Result:', battleResultData);
+        
+        setBattleResult(battleResultData);
         setIsBattling(false);
         
         // Add to battle history
@@ -1292,6 +1303,14 @@ export default function PokemonGoJourney() {
                   Battle Result: Victory! 🎉
                 </h3>
                 
+                {/* Debug Info - Remove this after fixing */}
+                <div className="mb-4 p-2 bg-gray-100 dark:bg-gray-700 rounded text-xs">
+                  <p>Debug: Battle Result Object</p>
+                  <p>My Team: {JSON.stringify(battleResult.myTeam?.map(p => p.name))}</p>
+                  <p>Opponent Team: {JSON.stringify(battleResult.opponentTeam?.map(p => p.name))}</p>
+                  <p>Battle Log Length: {battleResult.battleLog?.length}</p>
+                </div>
+                
                 {/* Teams Comparison */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-4">
                   {/* My Winning Team */}
@@ -1321,15 +1340,34 @@ export default function PokemonGoJourney() {
                   {/* Opponent Team */}
                   <div>
                     <h4 className="font-semibold text-red-700 dark:text-red-400 mb-2">Opponent Team:</h4>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                      {battleResult.opponentTeam?.map((pokemon, index) => (
-                        <div key={index} className="p-3 bg-white/70 dark:bg-gray-800/70 rounded-lg border border-red-200 dark:border-red-700">
-                          <p className="font-semibold text-red-800 dark:text-red-400">{pokemon.name}</p>
-                          <p className="text-sm text-gray-600 dark:text-gray-300">{pokemon.types.join('/')}</p>
-                          <p className="text-sm text-gray-600 dark:text-gray-300">CP: {pokemon.cp.toLocaleString()}</p>
-                        </div>
-                      ))}
-                    </div>
+                    {battleResult.opponentTeam && battleResult.opponentTeam.length > 0 ? (
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        {battleResult.opponentTeam.map((pokemon, index) => (
+                          <div key={index} className="p-3 bg-white/70 dark:bg-gray-800/70 rounded-lg border border-red-200 dark:border-red-700">
+                            <img 
+                              src={pokemon.image} 
+                              alt={pokemon.name} 
+                              className="w-12 h-12 mx-auto mb-2 object-contain"
+                            />
+                            <p className="font-semibold text-red-800 dark:text-red-400 text-center">{pokemon.name}</p>
+                            <div className="flex justify-center gap-1 mb-1">
+                              {pokemon.types.map((type, typeIndex) => (
+                                <Badge key={typeIndex} variant="secondary" className="text-xs">
+                                  {type}
+                                </Badge>
+                              ))}
+                            </div>
+                            <p className="text-sm text-gray-600 dark:text-gray-300 text-center">CP: {pokemon.cp.toLocaleString()}</p>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="p-4 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-700">
+                        <p className="text-red-600 dark:text-red-400 text-center">
+                          Opponent team data not available
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
 
