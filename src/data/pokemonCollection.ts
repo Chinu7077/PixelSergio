@@ -10,6 +10,7 @@ export interface Pokemon {
   isShiny?: boolean;
   isEvent?: boolean;
   isRare?: boolean;
+  isMighty?: boolean;
 }
 
 // Generate 840 Pokémon with realistic data
@@ -52,7 +53,60 @@ const legendaryPokemon = [
   { name: "Iron Boulder", id: 1013, types: ["Rock", "Psychic"], region: "Paldea", minCP: 5000, maxCP: 6000 },
   { name: "Iron Crown", id: 1014, types: ["Steel", "Psychic"], region: "Paldea", minCP: 5000, maxCP: 6000 },
   { name: "Terapagos", id: 1015, types: ["Normal"], region: "Paldea", minCP: 6000, maxCP: 7000 },
-  { name: "Pecharunt", id: 1016, types: ["Poison", "Ghost"], region: "Paldea", minCP: 5000, maxCP: 6000 }
+  { name: "Pecharunt", id: 1016, types: ["Poison", "Ghost"], region: "Paldea", minCP: 5000, maxCP: 6000 },
+  { name: "Meltan", id: 808, types: ["Steel"], region: "Alola", minCP: 1000, maxCP: 2000 },
+  { name: "Melmetal", id: 809, types: ["Steel"], region: "Alola", minCP: 4500, maxCP: 5500 }
+];
+
+// Mighty Pokémon (high CP, powerful battle Pokémon)
+const mightyPokemon = [
+  { name: "Mewtwo", id: 150, types: ["Psychic"], region: "Kanto", minCP: 4500, maxCP: 5500 },
+  { name: "Rayquaza", id: 384, types: ["Dragon", "Flying"], region: "Hoenn", minCP: 5000, maxCP: 6000 },
+  { name: "Dialga", id: 483, types: ["Steel", "Dragon"], region: "Sinnoh", minCP: 5000, maxCP: 6000 },
+  { name: "Palkia", id: 484, types: ["Water", "Dragon"], region: "Sinnoh", minCP: 5000, maxCP: 6000 },
+  { name: "Giratina Origin", id: 487, types: ["Ghost", "Dragon"], region: "Sinnoh", minCP: 5000, maxCP: 6000 },
+  { name: "Arceus", id: 493, types: ["Normal"], region: "Sinnoh", minCP: 5500, maxCP: 6500 },
+  { name: "Reshiram", id: 643, types: ["Dragon", "Fire"], region: "Unova", minCP: 5000, maxCP: 6000 },
+  { name: "Zekrom", id: 644, types: ["Dragon", "Electric"], region: "Unova", minCP: 5000, maxCP: 6000 },
+  { name: "Kyurem Black", id: 646, types: ["Dragon", "Ice"], region: "Unova", minCP: 5500, maxCP: 6500 },
+  { name: "Kyurem White", id: 646, types: ["Dragon", "Ice"], region: "Unova", minCP: 5500, maxCP: 6500 },
+  { name: "Xerneas", id: 716, types: ["Fairy"], region: "Kalos", minCP: 5000, maxCP: 6000 },
+  { name: "Yveltal", id: 717, types: ["Dark", "Flying"], region: "Kalos", minCP: 5000, maxCP: 6000 },
+  { name: "Zygarde Complete", id: 718, types: ["Dragon", "Ground"], region: "Kalos", minCP: 5500, maxCP: 6500 },
+  { name: "Solgaleo", id: 791, types: ["Psychic", "Steel"], region: "Alola", minCP: 5000, maxCP: 6000 },
+  { name: "Lunala", id: 792, types: ["Psychic", "Ghost"], region: "Alola", minCP: 5000, maxCP: 6000 },
+  { name: "Necrozma Dusk Mane", id: 800, types: ["Psychic", "Steel"], region: "Alola", minCP: 5500, maxCP: 6500 },
+  { name: "Necrozma Dawn Wings", id: 800, types: ["Psychic", "Ghost"], region: "Alola", minCP: 5500, maxCP: 6500 },
+  { name: "Ultra Necrozma", id: 800, types: ["Psychic", "Dragon"], region: "Alola", minCP: 6000, maxCP: 7000 },
+  { name: "Zacian Crowned", id: 888, types: ["Fairy", "Steel"], region: "Galar", minCP: 5500, maxCP: 6500 },
+  { name: "Zamazenta Crowned", id: 889, types: ["Fighting", "Steel"], region: "Galar", minCP: 5500, maxCP: 6500 },
+  { name: "Calyrex Shadow Rider", id: 898, types: ["Psychic", "Ghost"], region: "Galar", minCP: 5500, maxCP: 6500 },
+  { name: "Calyrex Ice Rider", id: 898, types: ["Psychic", "Ice"], region: "Galar", minCP: 5500, maxCP: 6500 },
+  { name: "Koraidon", id: 1007, types: ["Fighting", "Dragon"], region: "Paldea", minCP: 6000, maxCP: 7000 },
+  { name: "Miraidon", id: 1008, types: ["Electric", "Dragon"], region: "Paldea", minCP: 6000, maxCP: 7000 },
+  { name: "Walking Wake", id: 1009, types: ["Water", "Dragon"], region: "Paldea", minCP: 5500, maxCP: 6500 },
+  { name: "Iron Leaves", id: 1010, types: ["Grass", "Psychic"], region: "Paldea", minCP: 5500, maxCP: 6500 },
+  { name: "Gouging Fire", id: 1011, types: ["Fire", "Dragon"], region: "Paldea", minCP: 6000, maxCP: 7000 },
+  { name: "Raging Bolt", id: 1012, types: ["Electric", "Dragon"], region: "Paldea", minCP: 6000, maxCP: 7000 },
+  { name: "Iron Boulder", id: 1013, types: ["Rock", "Psychic"], region: "Paldea", minCP: 5500, maxCP: 6500 },
+  { name: "Iron Crown", id: 1014, types: ["Steel", "Psychic"], region: "Paldea", minCP: 5500, maxCP: 6500 },
+  { name: "Terapagos", id: 1015, types: ["Normal"], region: "Paldea", minCP: 6500, maxCP: 7500 },
+  { name: "Pecharunt", id: 1016, types: ["Poison", "Ghost"], region: "Paldea", minCP: 5500, maxCP: 6500 },
+  // High CP regular Pokémon
+  { name: "Dragonite", id: 149, types: ["Dragon", "Flying"], region: "Kanto", minCP: 4000, maxCP: 5000 },
+  { name: "Tyranitar", id: 248, types: ["Rock", "Dark"], region: "Johto", minCP: 4000, maxCP: 5000 },
+  { name: "Metagross", id: 376, types: ["Steel", "Psychic"], region: "Hoenn", minCP: 4000, maxCP: 5000 },
+  { name: "Salamence", id: 373, types: ["Dragon", "Flying"], region: "Hoenn", minCP: 4000, maxCP: 5000 },
+  { name: "Garchomp", id: 445, types: ["Dragon", "Ground"], region: "Sinnoh", minCP: 4500, maxCP: 5500 },
+  { name: "Hydreigon", id: 635, types: ["Dark", "Dragon"], region: "Unova", minCP: 4500, maxCP: 5500 },
+  { name: "Goodra", id: 706, types: ["Dragon"], region: "Kalos", minCP: 4500, maxCP: 5500 },
+  { name: "Kommo-o", id: 784, types: ["Dragon", "Fighting"], region: "Alola", minCP: 4500, maxCP: 5500 },
+  { name: "Dragapult", id: 887, types: ["Dragon", "Ghost"], region: "Galar", minCP: 4500, maxCP: 5500 },
+  { name: "Baxcalibur", id: 998, types: ["Dragon", "Ice"], region: "Paldea", minCP: 4500, maxCP: 5500 },
+  { name: "Roaring Moon", id: 1005, types: ["Dark", "Dragon"], region: "Paldea", minCP: 5500, maxCP: 6500 },
+  { name: "Iron Valiant", id: 1006, types: ["Fairy", "Fighting"], region: "Paldea", minCP: 5500, maxCP: 6500 },
+  { name: "Melmetal", id: 809, types: ["Steel"], region: "Alola", minCP: 4500, maxCP: 5500 },
+  { name: "Meltan", id: 808, types: ["Steel"], region: "Alola", minCP: 1000, maxCP: 2000 }
 ];
 
 // Popular Pokémon with their base data
@@ -332,6 +386,39 @@ rarePokemon.forEach((pokemon) => {
       isLegendary: false,
       isShiny: true,
       isRare: true
+    });
+  }
+});
+
+// Add Mighty Pokémon (regular and shiny variants)
+mightyPokemon.forEach((pokemon) => {
+  // Add regular mighty
+  pokemonCollection.push({
+    id: pokemonId++,
+    name: pokemon.name,
+    image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`,
+    cp: randomCP(pokemon.minCP, pokemon.maxCP),
+    types: pokemon.types,
+    region: pokemon.region,
+    caughtDate: randomDate(),
+    isLegendary: false,
+    isShiny: false,
+    isMighty: true
+  });
+  
+  // Add shiny mighty (if we have room)
+  if (pokemonId <= 840) {
+    pokemonCollection.push({
+      id: pokemonId++,
+      name: `Shiny ${pokemon.name}`,
+      image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`,
+      cp: randomCP(pokemon.minCP, pokemon.maxCP),
+      types: pokemon.types,
+      region: pokemon.region,
+      caughtDate: randomDate(),
+      isLegendary: false,
+      isShiny: true,
+      isMighty: true
     });
   }
 });

@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, Filter, Search, Trophy, Star, Medal, MapPin, Circle, User, Target, Zap, Flame, Droplets, Leaf, Mountain, Ghost, Brain, Shield, Sparkles, Crown, Award, Map, Sword, Users, Camera, Heart, Gift, School, Swimming, Flower, Dumbbell, Bird, Bug, Train, Fire, Guitar, Eye, Skateboard, Wand, Route, Building, Car, Plane, Ship, Bike, Sun, Moon, Camera as CameraIcon, Heart as HeartIcon, Gift as GiftIcon, School as SchoolIcon, Swimming as SwimmingIcon, Flower as FlowerIcon, Dumbbell as DumbbellIcon, Bird as BirdIcon, Bug as BugIcon, Train as TrainIcon, Fire as FireIcon, Guitar as GuitarIcon, Eye as EyeIcon, Skateboard as SkateboardIcon, Wand as WandIcon, Route as RouteIcon, Building as BuildingIcon, Car as CarIcon, Plane as PlaneIcon, Ship as ShipIcon, Bike as BikeIcon, Calendar, Zap as ZapIcon } from "lucide-react";
+import { ArrowLeft, Filter, Search, Trophy, Star, Medal, MapPin, Circle, User, Target, Zap, Flame, Droplets, Leaf, Mountain, Ghost, Brain, Shield, Sparkles, Crown, Award, Map, Sword, Users, Camera, Heart, Gift, School, Swimming, Flower, Dumbbell, Bird, Bug, Train, Fire, Guitar, Eye, Skateboard, Wand, Route, Building, Car, Plane, Ship, Bike, Sun, Moon, Camera as CameraIcon, Heart as HeartIcon, Gift as GiftIcon, School as SchoolIcon, Swimming as SwimmingIcon, Flower as FlowerIcon, Dumbbell as DumbbellIcon, Bird as BirdIcon, Bug as BugIcon, Train as TrainIcon, Fire as FireIcon, Guitar as GuitarIcon, Eye as EyeIcon, Skateboard as SkateboardIcon, Wand as WandIcon, Route as RouteIcon, Building as BuildingIcon, Car as CarIcon, Plane as PlaneIcon, Ship as ShipIcon, Bike as BikeIcon, Calendar, Zap as ZapIcon, Sword as SwordIcon } from "lucide-react";
 import pokemonCollection, { Pokemon } from "@/data/pokemonCollection";
 
 // Comment block for easy Pokémon data entry
@@ -24,6 +24,7 @@ Legendary Pokémon: 106
 Shiny Pokémon: 265
 Event Pokémon: 60
 Rare Pokémon: 80
+Mighty Pokémon: 70
 */
 
 // Using the comprehensive 840 Pokémon collection
@@ -37,6 +38,7 @@ export default function PokemonGoJourney() {
   const [legendaryFilter, setLegendaryFilter] = useState<string>("all");
   const [eventFilter, setEventFilter] = useState<string>("all");
   const [rareFilter, setRareFilter] = useState<string>("all");
+  const [mightyFilter, setMightyFilter] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [showAllMedals, setShowAllMedals] = useState(false);
@@ -58,8 +60,11 @@ export default function PokemonGoJourney() {
     const matchesRare = rareFilter === "all" || 
       (rareFilter === "rare" && pokemon.isRare) || 
       (rareFilter === "regular" && !pokemon.isRare);
+    const matchesMighty = mightyFilter === "all" || 
+      (mightyFilter === "mighty" && pokemon.isMighty) || 
+      (mightyFilter === "regular" && !pokemon.isMighty);
     const matchesSearch = pokemon.name.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesType && matchesRegion && matchesShiny && matchesLegendary && matchesEvent && matchesRare && matchesSearch;
+    return matchesType && matchesRegion && matchesShiny && matchesLegendary && matchesEvent && matchesRare && matchesMighty && matchesSearch;
   });
 
   // Calculate pagination
@@ -78,6 +83,7 @@ export default function PokemonGoJourney() {
   const shinyCount = mockPokemon.filter(p => p.isShiny).length;
   const eventCount = mockPokemon.filter(p => p.isEvent).length;
   const rareCount = mockPokemon.filter(p => p.isRare).length;
+  const mightyCount = mockPokemon.filter(p => p.isMighty).length;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-green-50 to-yellow-50 dark:from-gray-900 dark:via-blue-900 dark:to-purple-900 relative overflow-hidden transition-colors duration-300">
@@ -368,11 +374,11 @@ export default function PokemonGoJourney() {
               <Target className="h-6 w-6 text-blue-600 dark:text-blue-400" />
               <CardTitle className="text-2xl dark:text-white">Caught Pokémon Gallery</CardTitle>
             </div>
-            <p className="text-gray-600 dark:text-gray-300">Collection Info: This is a sample of your impressive collection of 840 Pokémon, including 106 Legendary, 265 Shiny, 60 Event, and 80 Rare variants.</p>
+            <p className="text-gray-600 dark:text-gray-300">Collection Info: This is a sample of your impressive collection of 840 Pokémon, including 106 Legendary, 265 Shiny, 60 Event, 80 Rare, and 70 Mighty variants.</p>
           </CardHeader>
           <CardContent>
             {/* Summary Stats */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-4 mb-4 sm:mb-6 p-2 sm:p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-2 sm:gap-4 mb-4 sm:mb-6 p-2 sm:p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
               <div className="text-center p-2 sm:p-0">
                 <p className="text-lg sm:text-xl lg:text-2xl font-bold text-blue-600 dark:text-blue-400 leading-tight">{totalPokemon.toLocaleString()}</p>
                 <p className="text-xs text-gray-600 dark:text-gray-300 leading-tight">Total Owned</p>
@@ -392,6 +398,10 @@ export default function PokemonGoJourney() {
               <div className="text-center p-2 sm:p-0">
                 <p className="text-lg sm:text-xl lg:text-2xl font-bold text-red-600 dark:text-red-400 leading-tight">{rareCount.toLocaleString()}</p>
                 <p className="text-xs text-gray-600 dark:text-gray-300 leading-tight">Rare</p>
+              </div>
+              <div className="text-center p-2 sm:p-0">
+                <p className="text-lg sm:text-xl lg:text-2xl font-bold text-purple-600 dark:text-purple-400 leading-tight">{mightyCount.toLocaleString()}</p>
+                <p className="text-xs text-gray-600 dark:text-gray-300 leading-tight">Mighty</p>
               </div>
               <div className="text-center p-2 sm:p-0">
                 <p className="text-lg sm:text-xl lg:text-2xl font-bold text-green-600 dark:text-green-400 leading-tight">10.5M</p>
@@ -481,6 +491,19 @@ export default function PokemonGoJourney() {
                   </SelectContent>
                 </Select>
               </div>
+              <div className="flex items-center gap-2">
+                <SwordIcon className="h-4 w-4 text-purple-500" />
+                <Select value={mightyFilter} onValueChange={setMightyFilter}>
+                  <SelectTrigger className="w-full sm:w-32">
+                    <SelectValue placeholder="Mighty" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Pokémon</SelectItem>
+                    <SelectItem value="mighty">Mighty Only</SelectItem>
+                    <SelectItem value="regular">Regular Only</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
               <div className="flex items-center gap-2 w-full">
                 <Search className="h-4 w-4 text-gray-500 flex-shrink-0" />
                 <Input
@@ -529,6 +552,12 @@ export default function PokemonGoJourney() {
                       {pokemon.isRare && (
                         <div className="absolute top-2 left-2">
                           <ZapIcon className="h-3 w-3 text-red-500" />
+                        </div>
+                      )}
+                      {/* Mighty indicator */}
+                      {pokemon.isMighty && (
+                        <div className="absolute bottom-2 left-2">
+                          <SwordIcon className="h-3 w-3 text-purple-500" />
                         </div>
                       )}
                     </div>
