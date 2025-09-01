@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, Filter, Search, Trophy, Star, Medal, MapPin, Circle, User, Target, Zap, Flame, Droplets, Leaf, Mountain, Ghost, Brain, Shield, Sparkles, Crown, Award, Map, Sword, Users, Camera, Heart, Gift, School, Swimming, Flower, Dumbbell, Bird, Bug, Train, Fire, Guitar, Eye, Skateboard, Wand, Route, Building, Car, Plane, Ship, Bike, Sun, Moon, Camera as CameraIcon, Heart as HeartIcon, Gift as GiftIcon, School as SchoolIcon, Swimming as SwimmingIcon, Flower as FlowerIcon, Dumbbell as DumbbellIcon, Bird as BirdIcon, Bug as BugIcon, Train as TrainIcon, Fire as FireIcon, Guitar as GuitarIcon, Eye as EyeIcon, Skateboard as SkateboardIcon, Wand as WandIcon, Route as RouteIcon, Building as BuildingIcon, Car as CarIcon, Plane as PlaneIcon, Ship as ShipIcon, Bike as BikeIcon, Calendar, Zap as ZapIcon, Sword as SwordIcon } from "lucide-react";
+import { ArrowLeft, Filter, Search, Trophy, Star, Medal, MapPin, Circle, User, Target, Zap, Flame, Droplets, Leaf, Mountain, Ghost, Brain, Shield, Sparkles, Crown, Award, Map, Sword, Users, Camera, Heart, Gift, School, Swimming, Flower, Dumbbell, Bird, Bug, Train, Fire, Guitar, Eye, Skateboard, Wand, Route, Building, Car, Plane, Ship, Bike, Sun, Moon, Camera as CameraIcon, Heart as HeartIcon, Gift as GiftIcon, School as SchoolIcon, Swimming as SwimmingIcon, Flower as FlowerIcon, Dumbbell as DumbbellIcon, Bird as BirdIcon, Bug as BugIcon, Train as TrainIcon, Fire as FireIcon, Guitar as GuitarIcon, Eye as EyeIcon, Skateboard as SkateboardIcon, Wand as WandIcon, Route as RouteIcon, Building as BuildingIcon, Car as CarIcon, Plane as PlaneIcon, Ship as ShipIcon, Bike as BikeIcon, Calendar, Zap as ZapIcon, Sword as SwordIcon, Play, Zap as ZapIcon2 } from "lucide-react";
 import pokemonCollection, { Pokemon } from "@/data/pokemonCollection";
 
 // Comment block for easy Pokémon data entry
@@ -44,6 +44,11 @@ export default function PokemonGoJourney() {
   const [currentPage, setCurrentPage] = useState(1);
   const [showAllMedals, setShowAllMedals] = useState(false);
   const itemsPerPage = 12;
+
+  // Battle Simulator state
+  const [selectedPokemon, setSelectedPokemon] = useState<Pokemon[]>([]);
+  const [battleResult, setBattleResult] = useState<any>(null);
+  const [isBattling, setIsBattling] = useState(false);
 
   // Filter Pokémon based on selected criteria
   const filteredPokemon = mockPokemon.filter((pokemon) => {
@@ -102,6 +107,46 @@ export default function PokemonGoJourney() {
   const favoritePokemon: Pokemon[] = favoriteNames
     .map((name) => mockPokemon.find(p => p.name === name || p.name.endsWith(` ${name}`)))
     .filter((p): p is Pokemon => Boolean(p));
+
+  // Battle Simulator functions
+  const addPokemonToTeam = (pokemon: Pokemon) => {
+    if (selectedPokemon.length < 3 && !selectedPokemon.find(p => p.id === pokemon.id)) {
+      setSelectedPokemon([...selectedPokemon, pokemon]);
+    }
+  };
+
+  const removePokemonFromTeam = (pokemonId: number) => {
+    setSelectedPokemon(selectedPokemon.filter(p => p.id !== pokemonId));
+  };
+
+  const simulateBattle = () => {
+    if (selectedPokemon.length !== 3) return;
+    
+    setIsBattling(true);
+    
+    // Simulate battle delay
+    setTimeout(() => {
+      const myTeam = [
+        { name: "Mewtwo", type: "Psychic", moves: ["Psycho Cut", "Psystrike"], cp: 4500 },
+        { name: "Rayquaza", type: "Dragon/Flying", moves: ["Dragon Tail", "Outrage"], cp: 5200 },
+        { name: "Metagross", type: "Steel/Psychic", moves: ["Bullet Punch", "Meteor Mash"], cp: 4200 }
+      ];
+      
+      const battleLog = [
+        "Round 1: Mewtwo uses Psycho Cut! Critical hit! Opponent's first Pokémon fainted!",
+        "Round 2: Rayquaza enters! Dragon Tail deals massive damage!",
+        "Round 3: Metagross finishes with Meteor Mash! Victory!",
+        "Your team's superior type coverage and high CP secured the win!"
+      ];
+      
+      setBattleResult({
+        myTeam,
+        battleLog,
+        victory: true
+      });
+      setIsBattling(false);
+    }, 2000);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-green-50 to-yellow-50 dark:from-gray-900 dark:via-blue-900 dark:to-purple-900 relative overflow-hidden transition-colors duration-300">
@@ -780,6 +825,230 @@ export default function PokemonGoJourney() {
                   <p className="font-semibold text-gray-800 dark:text-white">Master League</p>
                   <p className="text-sm text-gray-600 dark:text-gray-300">Dialga / Mewtwo / Togekiss</p>
                 </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* How to Defeat Giovanni & Team GO Rocket */}
+        <Card className="mt-8 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-gray-800 dark:to-gray-700 border border-amber-100 dark:border-gray-700 shadow-xl">
+          <CardHeader className="pb-4">
+            <div className="flex items-center gap-3">
+              <Shield className="h-6 w-6 text-amber-700 dark:text-amber-400" />
+              <CardTitle className="text-2xl text-gray-800 dark:text-white">How to Defeat Giovanni & Team GO Rocket</CardTitle>
+            </div>
+            <p className="text-gray-700 dark:text-gray-300">General tips and reliable counters that work across rotations.</p>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Giovanni */}
+            <div>
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-2 flex items-center gap-2">
+                <Crown className="h-5 w-5 text-yellow-600" /> Giovanni (Leader)
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <div className="p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-800/70">
+                  <p className="font-semibold text-gray-800 dark:text-white">Break Shields Fast</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">Use fast-charging fighters like <strong>Lucario</strong> or <strong>Machamp</strong> to burn both shields quickly.</p>
+                </div>
+                <div className="p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-800/70">
+                  <p className="font-semibold text-gray-800 dark:text-white">Versatile Core</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">Core trio works well: <strong>Fighter</strong> (Lucario/Machamp) + <strong>Fairy/Ice</strong> (Togekiss/Mamoswine) + <strong>Steel/Dragon</strong> (Metagross/Dialga).</p>
+                </div>
+                <div className="p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-800/70">
+                  <p className="font-semibold text-gray-800 dark:text-white">Common Counters</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">Persian: <strong>Lucario/Machamp</strong> | Dragons: <strong>Togekiss/Mamoswine</strong> | Steels: <strong>Lucario/Metagross</strong>.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Team GO Rocket Leaders */}
+            <div>
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-2 flex items-center gap-2">
+                <Users className="h-5 w-5 text-blue-600" /> Team GO Rocket Leaders (Arlo, Cliff, Sierra)
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-800/70">
+                  <p className="font-semibold text-gray-800 dark:text-white">Arlo</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">Often uses Fire/Dragon/Dark. Counters: <strong>Swampert</strong>, <strong>Togekiss</strong>, <strong>Metagross</strong>.</p>
+                </div>
+                <div className="p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-800/70">
+                  <p className="font-semibold text-gray-800 dark:text-white">Cliff</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">Often uses Rock/Ground/Fighting. Counters: <strong>Swampert</strong>, <strong>Machamp</strong>, <strong>Gardevoir</strong>.</p>
+                </div>
+                <div className="p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-800/70">
+                  <p className="font-semibold text-gray-800 dark:text-white">Sierra</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">Often uses Dark/Ghost/Water. Counters: <strong>Machamp</strong>, <strong>Togekiss</strong>, <strong>Raikou</strong>/<strong>Zekrom</strong>.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Grunts quick guide */}
+            <div>
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-2 flex items-center gap-2">
+                <Target className="h-5 w-5 text-green-600" /> Grunts Quick Counter Guide
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <div className="p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-800/70">
+                  <p className="font-semibold text-gray-800 dark:text-white">Dragon</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">Use <strong>Togekiss</strong>, <strong>Mamoswine</strong>, <strong>Gardevoir</strong>.</p>
+                </div>
+                <div className="p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-800/70">
+                  <p className="font-semibold text-gray-800 dark:text-white">Flying</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">Use <strong>Raikou/Zekrom</strong>, <strong>Rhyperior</strong>, <strong>Mamoswine</strong>.</p>
+                </div>
+                <div className="p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-800/70">
+                  <p className="font-semibold text-gray-800 dark:text-white">Water</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">Use <strong>Zekrom/Raikou</strong>, <strong>Roserade</strong>, <strong>Zarude</strong>.</p>
+                </div>
+                <div className="p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-800/70">
+                  <p className="font-semibold text-gray-800 dark:text-white">Dark</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">Use <strong>Machamp</strong>, <strong>Lucario</strong>, <strong>Togekiss</strong>.</p>
+                </div>
+                <div className="p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-800/70">
+                  <p className="font-semibold text-gray-800 dark:text-white">Rock</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">Use <strong>Swampert</strong>, <strong>Machamp</strong>, <strong>Metagross</strong>.</p>
+                </div>
+                <div className="p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-800/70">
+                  <p className="font-semibold text-gray-800 dark:text-white">Grass</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">Use <strong>Charizard</strong>, <strong>Blaziken</strong>, <strong>Typhlosion</strong>.</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Battle Simulator */}
+        <Card className="mt-8 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-700 border border-purple-100 dark:border-gray-700 shadow-xl">
+          <CardHeader className="pb-4">
+            <div className="flex items-center gap-3">
+              <Play className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+              <CardTitle className="text-2xl text-gray-800 dark:text-white">Battle Simulator</CardTitle>
+            </div>
+            <p className="text-gray-600 dark:text-gray-300">Choose 3 Pokémon and see how my team would win against yours!</p>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Team Selection */}
+            <div>
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">Your Team Selection</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+                {[0, 1, 2].map((slot) => (
+                  <div key={slot} className="min-h-[120px] border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg flex items-center justify-center bg-gray-50 dark:bg-gray-800">
+                    {selectedPokemon[slot] ? (
+                      <div className="text-center">
+                        <img 
+                          src={selectedPokemon[slot].image} 
+                          alt={selectedPokemon[slot].name} 
+                          className="w-16 h-16 mx-auto mb-2 object-contain"
+                        />
+                        <p className="text-sm font-semibold text-gray-800 dark:text-white">{selectedPokemon[slot].name}</p>
+                        <p className="text-xs text-gray-600 dark:text-gray-300">CP: {selectedPokemon[slot].cp.toLocaleString()}</p>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => removePokemonFromTeam(selectedPokemon[slot].id)}
+                          className="mt-1 text-xs"
+                        >
+                          Remove
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="text-center text-gray-500 dark:text-gray-400">
+                        <Target className="h-8 w-8 mx-auto mb-2" />
+                        <p className="text-sm">Empty Slot</p>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+              
+              {/* Battle Button */}
+              <div className="text-center">
+                <Button
+                  onClick={simulateBattle}
+                  disabled={selectedPokemon.length !== 3 || isBattling}
+                  className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-3 text-lg font-semibold"
+                >
+                  {isBattling ? (
+                    <div className="flex items-center gap-2">
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                      Battling...
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <Play className="h-5 w-5" />
+                      GO! Battle!
+                    </div>
+                  )}
+                </Button>
+              </div>
+            </div>
+
+            {/* Battle Result */}
+            {battleResult && (
+              <div className="mt-6 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                <h3 className="text-lg font-semibold text-green-800 dark:text-green-300 mb-3 flex items-center gap-2">
+                  <Trophy className="h-5 w-5" />
+                  Battle Result: Victory! 🎉
+                </h3>
+                
+                {/* My Winning Team */}
+                <div className="mb-4">
+                  <h4 className="font-semibold text-green-700 dark:text-green-400 mb-2">My Winning Team:</h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    {battleResult.myTeam.map((pokemon, index) => (
+                      <div key={index} className="p-3 bg-white/70 dark:bg-gray-800/70 rounded-lg border border-green-200 dark:border-green-700">
+                        <p className="font-semibold text-green-800 dark:text-green-400">{pokemon.name}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-300">{pokemon.type}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-300">CP: {pokemon.cp.toLocaleString()}</p>
+                        <div className="mt-2">
+                          <p className="text-xs font-semibold text-gray-700 dark:text-gray-300">Moves:</p>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {pokemon.moves.map((move, moveIndex) => (
+                              <Badge key={moveIndex} variant="secondary" className="text-xs">
+                                {move}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Battle Log */}
+                <div>
+                  <h4 className="font-semibold text-green-700 dark:text-green-400 mb-2">Battle Log:</h4>
+                  <div className="space-y-2">
+                    {battleResult.battleLog.map((log, index) => (
+                      <div key={index} className="p-2 bg-white/50 dark:bg-gray-800/50 rounded border border-green-200 dark:border-green-700">
+                        <p className="text-sm text-gray-700 dark:text-gray-300">{log}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Quick Add Pokémon */}
+            <div>
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">Quick Add Pokémon</h3>
+              <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-2">
+                {favoritePokemon.slice(0, 6).map((pokemon) => (
+                  <Button
+                    key={pokemon.id}
+                    variant="outline"
+                    onClick={() => addPokemonToTeam(pokemon)}
+                    disabled={selectedPokemon.length >= 3 || selectedPokemon.find(p => p.id === pokemon.id)}
+                    className="h-auto p-2 flex flex-col items-center gap-1 text-xs"
+                  >
+                    <img 
+                      src={pokemon.image} 
+                      alt={pokemon.name} 
+                      className="w-8 h-8 object-contain"
+                    />
+                    <span className="text-xs">{pokemon.name}</span>
+                  </Button>
+                ))}
               </div>
             </div>
           </CardContent>
