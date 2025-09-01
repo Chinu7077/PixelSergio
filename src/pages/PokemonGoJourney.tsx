@@ -39,6 +39,7 @@ export default function PokemonGoJourney() {
   const [eventFilter, setEventFilter] = useState<string>("all");
   const [rareFilter, setRareFilter] = useState<string>("all");
   const [mightyFilter, setMightyFilter] = useState<string>("all");
+  const [catchDateFilter, setCatchDateFilter] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [showAllMedals, setShowAllMedals] = useState(false);
@@ -63,8 +64,13 @@ export default function PokemonGoJourney() {
     const matchesMighty = mightyFilter === "all" || 
       (mightyFilter === "mighty" && pokemon.isMighty) || 
       (mightyFilter === "regular" && !pokemon.isMighty);
+    const matchesCatchDate = catchDateFilter === "all" || 
+      (catchDateFilter === "recent" && new Date(pokemon.caughtDate) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)) || // Last 30 days
+      (catchDateFilter === "this-year" && new Date(pokemon.caughtDate).getFullYear() === new Date().getFullYear()) ||
+      (catchDateFilter === "last-year" && new Date(pokemon.caughtDate).getFullYear() === new Date().getFullYear() - 1) ||
+      (catchDateFilter === "older" && new Date(pokemon.caughtDate) < new Date(Date.now() - 365 * 24 * 60 * 60 * 1000)); // Older than 1 year
     const matchesSearch = pokemon.name.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesType && matchesRegion && matchesShiny && matchesLegendary && matchesEvent && matchesRare && matchesMighty && matchesSearch;
+    return matchesType && matchesRegion && matchesShiny && matchesLegendary && matchesEvent && matchesRare && matchesMighty && matchesCatchDate && matchesSearch;
   });
 
   // Calculate pagination
@@ -84,6 +90,12 @@ export default function PokemonGoJourney() {
   const eventCount = mockPokemon.filter(p => p.isEvent).length;
   const rareCount = mockPokemon.filter(p => p.isRare).length;
   const mightyCount = mockPokemon.filter(p => p.isMighty).length;
+  
+  // Calculate catch date statistics
+  const currentYear = new Date().getFullYear();
+  const thisYearCatches = mockPokemon.filter(p => new Date(p.caughtDate).getFullYear() === currentYear).length;
+  const lastYearCatches = mockPokemon.filter(p => new Date(p.caughtDate).getFullYear() === currentYear - 1).length;
+  const recentCatches = mockPokemon.filter(p => new Date(p.caughtDate) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)).length;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-green-50 to-yellow-50 dark:from-gray-900 dark:via-blue-900 dark:to-purple-900 relative overflow-hidden transition-colors duration-300">
@@ -375,6 +387,22 @@ export default function PokemonGoJourney() {
               <CardTitle className="text-2xl dark:text-white">Caught Pokémon Gallery</CardTitle>
             </div>
             <p className="text-gray-600 dark:text-gray-300">Collection Info: This is a sample of your impressive collection of 840 Pokémon, including 106 Legendary, 265 Shiny, 60 Event, 80 Rare, and 70 Mighty variants.</p>
+            <div className="mt-4 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+              <div className="flex flex-wrap gap-4 text-sm">
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4 text-green-600" />
+                  <span className="text-green-700 dark:text-green-300">Recent (30 days): <strong>{recentCatches}</strong></span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4 text-blue-600" />
+                  <span className="text-blue-700 dark:text-blue-300">This Year: <strong>{thisYearCatches}</strong></span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4 text-purple-600" />
+                  <span className="text-purple-700 dark:text-purple-300">Last Year: <strong>{lastYearCatches}</strong></span>
+                </div>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
             {/* Summary Stats */}
@@ -491,20 +519,35 @@ export default function PokemonGoJourney() {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="flex items-center gap-2">
-                <SwordIcon className="h-4 w-4 text-purple-500" />
-                <Select value={mightyFilter} onValueChange={setMightyFilter}>
-                  <SelectTrigger className="w-full sm:w-32">
-                    <SelectValue placeholder="Mighty" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Pokémon</SelectItem>
-                    <SelectItem value="mighty">Mighty Only</SelectItem>
-                    <SelectItem value="regular">Regular Only</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex items-center gap-2 w-full">
+                              <div className="flex items-center gap-2">
+                  <SwordIcon className="h-4 w-4 text-purple-500" />
+                  <Select value={mightyFilter} onValueChange={setMightyFilter}>
+                    <SelectTrigger className="w-full sm:w-32">
+                      <SelectValue placeholder="Mighty" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Pokémon</SelectItem>
+                      <SelectItem value="mighty">Mighty Only</SelectItem>
+                      <SelectItem value="regular">Regular Only</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4 text-blue-500" />
+                  <Select value={catchDateFilter} onValueChange={setCatchDateFilter}>
+                    <SelectTrigger className="w-full sm:w-32">
+                      <SelectValue placeholder="Catch Date" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Dates</SelectItem>
+                      <SelectItem value="recent">Last 30 Days</SelectItem>
+                      <SelectItem value="this-year">This Year</SelectItem>
+                      <SelectItem value="last-year">Last Year</SelectItem>
+                      <SelectItem value="older">Older</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex items-center gap-2 w-full">
                 <Search className="h-4 w-4 text-gray-500 flex-shrink-0" />
                 <Input
                   placeholder="Search Pokémon..."
@@ -572,6 +615,7 @@ export default function PokemonGoJourney() {
                         ))}
                       </div>
                       <p className="text-xs text-gray-500">{pokemon.region}</p>
+                      <p className="text-xs text-gray-400 mt-1">Caught: {new Date(pokemon.caughtDate).toLocaleDateString()}</p>
                     </div>
                   </CardContent>
                 </Card>
