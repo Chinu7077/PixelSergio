@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, Filter, Search, Trophy, Star, Medal, MapPin, Circle, User, Target, Zap, Flame, Droplets, Leaf, Mountain, Ghost, Brain, Shield, Sparkles, Crown, Award, Map, Sword, Users, Camera, Heart, Gift, School, Swimming, Flower, Dumbbell, Bird, Bug, Train, Fire, Guitar, Eye, Skateboard, Wand, Route, Building, Car, Plane, Ship, Bike, Sun, Moon, Camera as CameraIcon, Heart as HeartIcon, Gift as GiftIcon, School as SchoolIcon, Swimming as SwimmingIcon, Flower as FlowerIcon, Dumbbell as DumbbellIcon, Bird as BirdIcon, Bug as BugIcon, Train as TrainIcon, Fire as FireIcon, Guitar as GuitarIcon, Eye as EyeIcon, Skateboard as SkateboardIcon, Wand as WandIcon, Route as RouteIcon, Building as BuildingIcon, Car as CarIcon, Plane as PlaneIcon, Ship as ShipIcon, Bike as BikeIcon, Calendar, Zap as ZapIcon, Sword as SwordIcon, Play, Zap as ZapIcon2, RefreshCw } from "lucide-react";
+import { ArrowLeft, Filter, Search, Trophy, Star, Medal, MapPin, Circle, User, Target, Zap, Flame, Droplets, Leaf, Mountain, Ghost, Brain, Shield, Sparkles, Crown, Award, Map, Sword, Users, Camera, Heart, Gift, School, Swimming, Flower, Dumbbell, Bird, Bug, Train, Fire, Guitar, Eye, Skateboard, Wand, Route, Building, Car, Plane, Ship, Bike, Sun, Moon, Camera as CameraIcon, Heart as HeartIcon, Gift as GiftIcon, School as SchoolIcon, Swimming as SwimmingIcon, Flower as FlowerIcon, Dumbbell as DumbbellIcon, Bird as BirdIcon, Bug as BugIcon, Train as TrainIcon, Fire as FireIcon, Guitar as GuitarIcon, Eye as EyeIcon, Skateboard as SkateboardIcon, Wand as WandIcon, Route as RouteIcon, Building as BuildingIcon, Car as CarIcon, Plane as PlaneIcon, Ship as ShipIcon, Bike as BikeIcon, Calendar, Zap as ZapIcon, Sword as SwordIcon, Play, Zap as ZapIcon2, RefreshCw, Share, X } from "lucide-react";
 import pokemonCollection, { Pokemon } from "@/data/pokemonCollection";
 
 // Comment block for easy Pokémon data entry
@@ -49,6 +49,17 @@ export default function PokemonGoJourney() {
   const [selectedPokemon, setSelectedPokemon] = useState<Pokemon[]>([]);
   const [battleResult, setBattleResult] = useState<any>(null);
   const [isBattling, setIsBattling] = useState(false);
+  const [opponentTeam, setOpponentTeam] = useState<Pokemon[]>([]);
+  const [battleMode, setBattleMode] = useState<'manual' | 'auto'>('auto');
+  const [battleTurn, setBattleTurn] = useState(0);
+  const [battleLog, setBattleLog] = useState<string[]>([]);
+  const [teamPower, setTeamPower] = useState(0);
+  const [showPokedexInfo, setShowPokedexInfo] = useState<Pokemon | null>(null);
+  const [achievements, setAchievements] = useState<string[]>([]);
+  const [battleHistory, setBattleHistory] = useState<any[]>([]);
+  const [survivalMode, setSurvivalMode] = useState(false);
+  const [bossMode, setBossMode] = useState(false);
+  const [pokemonName, setPokemonName] = useState<string>("");
 
   // Filter Pokémon based on selected criteria
   const filteredPokemon = mockPokemon.filter((pokemon) => {
@@ -110,8 +121,14 @@ export default function PokemonGoJourney() {
 
   // Battle Simulator functions
   const addPokemonToTeam = (pokemon: Pokemon) => {
-    if (selectedPokemon.length < 3 && !selectedPokemon.find(p => p.id === pokemon.id)) {
+    if (selectedPokemon.length < 3) {
       setSelectedPokemon([...selectedPokemon, pokemon]);
+      // Calculate team power
+      const newTeam = [...selectedPokemon, pokemon];
+      const totalCP = newTeam.reduce((sum, p) => sum + p.cp, 0);
+      const avgCP = totalCP / newTeam.length;
+      const powerPercentage = Math.min(100, (avgCP / 5000) * 100);
+      setTeamPower(powerPercentage);
     }
   };
 
@@ -119,35 +136,242 @@ export default function PokemonGoJourney() {
     const newTeam = [...selectedPokemon];
     newTeam.splice(slotIndex, 1);
     setSelectedPokemon(newTeam);
+    
+    // Recalculate team power
+    if (newTeam.length > 0) {
+      const totalCP = newTeam.reduce((sum, p) => sum + p.cp, 0);
+      const avgCP = totalCP / newTeam.length;
+      const powerPercentage = Math.min(100, (avgCP / 5000) * 100);
+      setTeamPower(powerPercentage);
+    } else {
+      setTeamPower(0);
+    }
+  };
+
+  const generateOpponentTeam = () => {
+    const availablePokemon = mockPokemon.filter(p => !selectedPokemon.find(sp => sp.id === p.id));
+    const shuffled = availablePokemon.sort(() => 0.5 - Math.random());
+    const opponent = shuffled.slice(0, 3);
+    setOpponentTeam(opponent);
+    return opponent;
   };
 
   const simulateBattle = () => {
     if (selectedPokemon.length !== 3) return;
     
     setIsBattling(true);
+    setBattleTurn(0);
+    setBattleLog([]);
     
-    // Simulate battle delay
-    setTimeout(() => {
-      const myTeam = [
-        { name: "Mewtwo", type: "Psychic", moves: ["Psycho Cut", "Psystrike"], cp: 4500 },
-        { name: "Rayquaza", type: "Dragon/Flying", moves: ["Dragon Tail", "Outrage"], cp: 5200 },
-        { name: "Metagross", type: "Steel/Psychic", moves: ["Bullet Punch", "Meteor Mash"], cp: 4200 }
-      ];
+    // Generate random opponent team
+    const opponent = generateOpponentTeam();
+    
+    // Battle simulation with type advantages
+    const battleSteps = [];
+    let turn = 1;
+    
+    // Simulate battle rounds
+    for (let i = 0; i < 3; i++) {
+      const myPokemon = selectedPokemon[i];
+      const oppPokemon = opponent[i];
       
-      const battleLog = [
-        "Round 1: Mewtwo uses Psycho Cut! Critical hit! Opponent's first Pokémon fainted!",
-        "Round 2: Rayquaza enters! Dragon Tail deals massive damage!",
-        "Round 3: Metagross finishes with Meteor Mash! Victory!",
-        "Your team's superior type coverage and high CP secured the win!"
-      ];
+      // Determine type effectiveness
+      const effectiveness = getTypeEffectiveness(myPokemon.types[0], oppPokemon.types[0]);
+      const effectivenessText = effectiveness > 1 ? "super effective" : effectiveness < 1 ? "not very effective" : "normal";
       
-      setBattleResult({
-        myTeam,
-        battleLog,
-        victory: true
-      });
-      setIsBattling(false);
-    }, 2000);
+      // Generate move based on type
+      const move = getMoveForType(myPokemon.types[0]);
+      const moveEmoji = getMoveEmoji(myPokemon.types[0]);
+      
+      battleSteps.push(`Round ${turn}: ${myPokemon.name} used ${move} ${moveEmoji}! ${oppPokemon.name} took damage!`);
+      battleSteps.push(`Type advantage: ${myPokemon.types[0]} vs ${oppPokemon.types[0]} - ${effectivenessText}!`);
+      
+      turn++;
+    }
+    
+    // Victory message
+    battleSteps.push("🎉 Victory! Your team's superior strategy secured the win!");
+    
+    // Animate battle log
+    let currentStep = 0;
+    const animateBattle = () => {
+      if (currentStep < battleSteps.length) {
+        setBattleLog(prev => [...prev, battleSteps[currentStep]]);
+        currentStep++;
+        setTimeout(animateBattle, 800);
+      } else {
+        // Battle complete
+        const myTeam = selectedPokemon.map(p => ({
+          name: p.name,
+          type: p.types.join('/'),
+          moves: getMovesForPokemon(p.types[0]),
+          cp: p.cp
+        }));
+        
+        setBattleResult({
+          myTeam,
+          opponentTeam: opponent,
+          battleLog: battleSteps,
+          victory: true
+        });
+        setIsBattling(false);
+        
+        // Add to battle history
+        setBattleHistory(prev => [...prev, {
+          date: new Date().toLocaleDateString(),
+          result: 'Victory',
+          team: selectedPokemon.map(p => p.name).join(', '),
+          opponent: opponent.map(p => p.name).join(', ')
+        }]);
+        
+        // Check for achievements
+        checkAchievements();
+      }
+    };
+    
+    setTimeout(animateBattle, 500);
+  };
+
+  // Helper functions for battle simulation
+  const getTypeEffectiveness = (attackerType: string, defenderType: string): number => {
+    const typeChart: { [key: string]: { [key: string]: number } } = {
+      Fire: { Grass: 2, Ice: 2, Bug: 2, Steel: 2, Water: 0.5, Rock: 0.5, Dragon: 0.5, Fire: 0.5 },
+      Water: { Fire: 2, Ground: 2, Rock: 2, Grass: 0.5, Water: 0.5, Dragon: 0.5 },
+      Grass: { Water: 2, Ground: 2, Rock: 2, Fire: 0.5, Grass: 0.5, Poison: 0.5, Flying: 0.5, Bug: 0.5, Dragon: 0.5, Steel: 0.5 },
+      Electric: { Water: 2, Flying: 2, Ground: 0, Grass: 0.5, Electric: 0.5, Dragon: 0.5 },
+      Ice: { Grass: 2, Ground: 2, Flying: 2, Dragon: 2, Fire: 0.5, Water: 0.5, Ice: 0.5, Steel: 0.5 },
+      Fighting: { Normal: 2, Ice: 2, Rock: 2, Steel: 2, Dark: 2, Flying: 0.5, Poison: 0.5, Psychic: 0.5, Bug: 0.5, Fairy: 0.5, Ghost: 0 },
+      Poison: { Grass: 2, Fairy: 2, Poison: 0.5, Ground: 0.5, Rock: 0.5, Ghost: 0.5, Steel: 0 },
+      Ground: { Fire: 2, Electric: 2, Poison: 2, Rock: 2, Steel: 2, Grass: 0.5, Bug: 0.5, Flying: 0 },
+      Flying: { Grass: 2, Fighting: 2, Bug: 2, Electric: 0.5, Rock: 0.5, Steel: 0.5 },
+      Psychic: { Fighting: 2, Poison: 2, Dark: 0, Steel: 0.5, Psychic: 0.5 },
+      Bug: { Grass: 2, Psychic: 2, Dark: 2, Fire: 0.5, Fighting: 0.5, Poison: 0.5, Flying: 0.5, Ghost: 0.5, Steel: 0.5, Fairy: 0.5 },
+      Rock: { Fire: 2, Ice: 2, Flying: 2, Bug: 2, Fighting: 0.5, Ground: 0.5, Steel: 0.5 },
+      Ghost: { Psychic: 2, Ghost: 2, Dark: 0.5, Normal: 0 },
+      Steel: { Ice: 2, Rock: 2, Fairy: 2, Fire: 0.5, Water: 0.5, Electric: 0.5, Steel: 0.5 },
+      Dragon: { Dragon: 2, Steel: 0.5, Fairy: 0 },
+      Dark: { Psychic: 2, Ghost: 2, Fighting: 0.5, Dark: 0.5, Fairy: 0.5 },
+      Fairy: { Fighting: 2, Dragon: 2, Dark: 2, Poison: 0.5, Steel: 0.5, Fire: 0.5 }
+    };
+    
+    return typeChart[attackerType]?.[defenderType] || 1;
+  };
+
+  const getMoveForType = (type: string): string => {
+    const moves: { [key: string]: string } = {
+      Fire: "Flamethrower",
+      Water: "Surf",
+      Grass: "Solar Beam",
+      Electric: "Thunderbolt",
+      Ice: "Ice Beam",
+      Fighting: "Close Combat",
+      Poison: "Sludge Bomb",
+      Ground: "Earthquake",
+      Flying: "Air Slash",
+      Psychic: "Psychic",
+      Bug: "Bug Buzz",
+      Rock: "Stone Edge",
+      Ghost: "Shadow Ball",
+      Steel: "Iron Head",
+      Dragon: "Dragon Claw",
+      Dark: "Dark Pulse",
+      Fairy: "Moonblast"
+    };
+    return moves[type] || "Tackle";
+  };
+
+  const getMoveEmoji = (type: string): string => {
+    const emojis: { [key: string]: string } = {
+      Fire: "🔥",
+      Water: "🌊",
+      Grass: "🌿",
+      Electric: "⚡",
+      Ice: "❄️",
+      Fighting: "👊",
+      Poison: "☠️",
+      Ground: "🌍",
+      Flying: "🦅",
+      Psychic: "🧠",
+      Bug: "🐛",
+      Rock: "🪨",
+      Ghost: "👻",
+      Steel: "⚔️",
+      Dragon: "🐉",
+      Dark: "🌑",
+      Fairy: "✨"
+    };
+    return emojis[type] || "💥";
+  };
+
+  const getMovesForPokemon = (type: string): string[] => {
+    const move = getMoveForType(type);
+    const quickMove = type === "Fire" ? "Ember" : type === "Water" ? "Water Gun" : type === "Grass" ? "Vine Whip" : "Quick Attack";
+    return [quickMove, move];
+  };
+
+  const checkAchievements = () => {
+    const newAchievements = [];
+    
+    if (battleHistory.length === 0) {
+      newAchievements.push("First Win 🏆");
+    }
+    
+    if (battleHistory.length >= 10) {
+      newAchievements.push("Battle Veteran 🎖️");
+    }
+    
+    if (selectedPokemon.every(p => p.types.includes("Electric"))) {
+      newAchievements.push("All Electric Team ⚡");
+    }
+    
+    if (selectedPokemon.every(p => p.isLegendary)) {
+      newAchievements.push("Legendary Master 👑");
+    }
+    
+    setAchievements(prev => [...new Set([...prev, ...newAchievements])]);
+  };
+
+  const getFunFact = (pokemonName: string, type: string): string => {
+    const funFacts: { [key: string]: string[] } = {
+      Fire: [
+        "Fire-type Pokémon are known for their passionate and energetic nature!",
+        "They're immune to burn status and love hot environments.",
+        "Many Fire-types evolve through fire stones or high friendship."
+      ],
+      Water: [
+        "Water Pokémon are adaptable and can survive in many environments!",
+        "They're excellent swimmers and often found near bodies of water.",
+        "Water-types are known for their healing and defensive moves."
+      ],
+      Grass: [
+        "Grass Pokémon have a strong connection to nature and plants!",
+        "They can absorb sunlight for energy through photosynthesis.",
+        "Many Grass-types learn status moves like Sleep Powder and Leech Seed."
+      ],
+      Electric: [
+        "Electric Pokémon are fast and powerful with high Special Attack!",
+        "They're immune to paralysis and can paralyze opponents.",
+        "Electric-types often have high Speed stats and learn Thunder moves."
+      ],
+      Psychic: [
+        "Psychic Pokémon are mysterious and have incredible mental powers!",
+        "They're weak to Dark, Bug, and Ghost types.",
+        "Many Psychic-types can learn teleportation and mind-reading moves."
+      ],
+      Dragon: [
+        "Dragon Pokémon are legendary creatures with incredible power!",
+        "They're weak to Ice, Dragon, and Fairy types.",
+        "Dragon-types often have high stats and learn powerful moves."
+      ]
+    };
+    
+    const facts = funFacts[type] || [
+      "This Pokémon has unique abilities and characteristics!",
+      "Every Pokémon is special in its own way.",
+      "Trainers love discovering new things about their Pokémon!"
+    ];
+    
+    return facts[Math.floor(Math.random() * facts.length)];
   };
 
   return (
@@ -213,6 +437,12 @@ export default function PokemonGoJourney() {
                 </div>
                 <p className="font-semibold text-sm sm:text-base">NebulaSergio</p>
                 <p className="text-base sm:text-lg font-bold">53</p>
+                {/* Easter Egg for Dor */}
+                {pokemonName?.toLowerCase().includes('dor') && (
+                  <p className="text-xs text-yellow-600 dark:text-yellow-400 font-semibold mt-1">
+                    ✨ Dor always wins! ✨
+                  </p>
+                )}
               </div>
               <div className="text-center">
                 <Target className="h-6 w-6 sm:h-8 sm:w-8 mx-auto mb-2 text-blue-300" />
@@ -929,9 +1159,32 @@ export default function PokemonGoJourney() {
                             <p className="text-gray-600 dark:text-gray-300">Choose 3 Pokémon (can be the same Pokémon multiple times) and see how my team would win against yours!</p>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* Team Selection */}
+                        {/* Team Selection */}
             <div>
-                             <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">Your Team Selection (Can Include Duplicates)</h3>
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">Your Team Selection (Can Include Duplicates)</h3>
+              
+              {/* Team Power Meter */}
+              {selectedPokemon.length > 0 && (
+                <div className="mb-4 p-3 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-semibold text-blue-800 dark:text-blue-300">Team Power</span>
+                    <span className="text-lg font-bold text-blue-600 dark:text-blue-400">{Math.round(teamPower)}%</span>
+                  </div>
+                  <div className="w-full bg-blue-200 dark:bg-blue-800 rounded-full h-3">
+                    <div 
+                      className="bg-gradient-to-r from-blue-500 to-purple-500 h-3 rounded-full transition-all duration-500 ease-out"
+                      style={{ width: `${teamPower}%` }}
+                    ></div>
+                  </div>
+                  <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
+                    {teamPower < 30 ? "Rookie Team" : 
+                     teamPower < 60 ? "Veteran Team" : 
+                     teamPower < 80 ? "Elite Team" : "Master Team"} 
+                    - Average CP: {selectedPokemon.length > 0 ? Math.round(selectedPokemon.reduce((sum, p) => sum + p.cp, 0) / selectedPokemon.length).toLocaleString() : 0}
+                  </p>
+                </div>
+              )}
+              
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
                 {[0, 1, 2].map((slot) => (
                   <div key={slot} className="min-h-[120px] border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg flex items-center justify-center bg-gray-50 dark:bg-gray-800">
@@ -970,25 +1223,64 @@ export default function PokemonGoJourney() {
                 ))}
               </div>
               
-              {/* Battle Button */}
-              <div className="text-center">
-                <Button
-                  onClick={simulateBattle}
-                  disabled={selectedPokemon.length !== 3 || isBattling}
-                  className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-3 text-lg font-semibold"
-                >
-                  {isBattling ? (
-                    <div className="flex items-center gap-2">
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                      Battling...
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <Play className="h-5 w-5" />
-                      GO! Battle!
-                    </div>
-                  )}
-                </Button>
+              {/* Battle Controls */}
+              <div className="space-y-4">
+                {/* Battle Mode Selection */}
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Battle Mode:</span>
+                    <Select value={battleMode} onValueChange={(value: 'manual' | 'auto') => setBattleMode(value)}>
+                      <SelectTrigger className="w-32">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="auto">Auto Battle</SelectItem>
+                        <SelectItem value="manual">Manual Battle</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  {/* Special Modes */}
+                  <div className="flex gap-2">
+                    <Button
+                      variant={survivalMode ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setSurvivalMode(!survivalMode)}
+                      className={survivalMode ? "bg-red-500 hover:bg-red-600" : ""}
+                    >
+                      {survivalMode ? "🔥 Survival" : "Survival Mode"}
+                    </Button>
+                    <Button
+                      variant={bossMode ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setBossMode(!bossMode)}
+                      className={bossMode ? "bg-purple-500 hover:bg-purple-600" : ""}
+                    >
+                      {bossMode ? "👑 Boss" : "Boss Mode"}
+                    </Button>
+                  </div>
+                </div>
+                
+                {/* Battle Button */}
+                <div className="text-center">
+                  <Button
+                    onClick={simulateBattle}
+                    disabled={selectedPokemon.length !== 3 || isBattling}
+                    className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-3 text-lg font-semibold"
+                  >
+                    {isBattling ? (
+                      <div className="flex items-center gap-2">
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                        Battling...
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <Play className="h-5 w-5" />
+                        GO! Battle!
+                      </div>
+                    )}
+                  </Button>
+                </div>
               </div>
             </div>
 
@@ -1000,34 +1292,51 @@ export default function PokemonGoJourney() {
                   Battle Result: Victory! 🎉
                 </h3>
                 
-                {/* My Winning Team */}
-                <div className="mb-4">
-                  <h4 className="font-semibold text-green-700 dark:text-green-400 mb-2">My Winning Team:</h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    {battleResult.myTeam.map((pokemon, index) => (
-                      <div key={index} className="p-3 bg-white/70 dark:bg-gray-800/70 rounded-lg border border-green-200 dark:border-green-700">
-                        <p className="font-semibold text-green-800 dark:text-green-400">{pokemon.name}</p>
-                        <p className="text-sm text-gray-600 dark:text-gray-300">{pokemon.type}</p>
-                        <p className="text-sm text-gray-600 dark:text-gray-300">CP: {pokemon.cp.toLocaleString()}</p>
-                        <div className="mt-2">
-                          <p className="text-xs font-semibold text-gray-700 dark:text-gray-300">Moves:</p>
-                          <div className="flex flex-wrap gap-1 mt-1">
-                            {pokemon.moves.map((move, moveIndex) => (
-                              <Badge key={moveIndex} variant="secondary" className="text-xs">
-                                {move}
-                              </Badge>
-                            ))}
+                {/* Teams Comparison */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-4">
+                  {/* My Winning Team */}
+                  <div>
+                    <h4 className="font-semibold text-green-700 dark:text-green-400 mb-2">Your Team:</h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      {battleResult.myTeam.map((pokemon, index) => (
+                        <div key={index} className="p-3 bg-white/70 dark:bg-gray-800/70 rounded-lg border border-green-200 dark:border-green-700">
+                          <p className="font-semibold text-green-800 dark:text-green-400">{pokemon.name}</p>
+                          <p className="text-sm text-gray-600 dark:text-gray-300">{pokemon.type}</p>
+                          <p className="text-sm text-gray-600 dark:text-gray-300">CP: {pokemon.cp.toLocaleString()}</p>
+                          <div className="mt-2">
+                            <p className="text-xs font-semibold text-gray-700 dark:text-gray-300">Moves:</p>
+                            <div className="flex flex-wrap gap-1 mt-1">
+                              {pokemon.moves.map((move, moveIndex) => (
+                                <Badge key={moveIndex} variant="secondary" className="text-xs">
+                                  {move}
+                                </Badge>
+                              ))}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Opponent Team */}
+                  <div>
+                    <h4 className="font-semibold text-red-700 dark:text-red-400 mb-2">Opponent Team:</h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      {battleResult.opponentTeam?.map((pokemon, index) => (
+                        <div key={index} className="p-3 bg-white/70 dark:bg-gray-800/70 rounded-lg border border-red-200 dark:border-red-700">
+                          <p className="font-semibold text-red-800 dark:text-red-400">{pokemon.name}</p>
+                          <p className="text-sm text-gray-600 dark:text-gray-300">{pokemon.types.join('/')}</p>
+                          <p className="text-sm text-gray-600 dark:text-gray-300">CP: {pokemon.cp.toLocaleString()}</p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
 
                 {/* Battle Log */}
-                <div>
+                <div className="mb-4">
                   <h4 className="font-semibold text-green-700 dark:text-green-400 mb-2">Battle Log:</h4>
-                  <div className="space-y-2">
+                  <div className="space-y-2 max-h-48 overflow-y-auto">
                     {battleResult.battleLog.map((log, index) => (
                       <div key={index} className="p-2 bg-white/50 dark:bg-gray-800/50 rounded border border-green-200 dark:border-green-700">
                         <p className="text-sm text-gray-700 dark:text-gray-300">{log}</p>
@@ -1036,18 +1345,52 @@ export default function PokemonGoJourney() {
                   </div>
                 </div>
                 
-                {/* Play Again Button */}
-                <div className="mt-4 text-center">
+                {/* Achievements */}
+                {achievements.length > 0 && (
+                  <div className="mb-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-700">
+                    <h4 className="font-semibold text-yellow-700 dark:text-yellow-400 mb-2 flex items-center gap-2">
+                      <Star className="h-4 w-4" />
+                      New Achievements Unlocked!
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      {achievements.slice(-3).map((achievement, index) => (
+                        <Badge key={index} variant="secondary" className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+                          {achievement}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
+                {/* Battle Actions */}
+                <div className="flex flex-col sm:flex-row gap-2 justify-center">
                   <Button 
                     variant="outline" 
                     onClick={() => {
                       setBattleResult(null);
                       setSelectedPokemon([]);
+                      setOpponentTeam([]);
                     }}
                     className="border-green-300 dark:border-green-600 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20"
                   >
                     <RefreshCw className="h-4 w-4 mr-2" />
                     Play Again
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => {
+                      // Share battle result
+                      const shareText = `🎮 Battle Result: ${selectedPokemon.map(p => p.name).join(', ')} defeated ${battleResult.opponentTeam?.map(p => p.name).join(', ')} with strategic type advantages! ⚔️`;
+                      if (navigator.share) {
+                        navigator.share({ text: shareText });
+                      } else {
+                        navigator.clipboard.writeText(shareText);
+                      }
+                    }}
+                    className="border-blue-300 dark:border-blue-600 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                  >
+                    <Share className="h-4 w-4 mr-2" />
+                    Share Result
                   </Button>
                 </div>
               </div>
@@ -1056,6 +1399,9 @@ export default function PokemonGoJourney() {
             {/* Single Pokémon Selector */}
             <div>
               <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">Single Pokémon Selector</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                💡 Double-click any Pokémon for detailed Pokédex information!
+              </p>
               
               {/* Search and Filters */}
               <div className="mb-4 space-y-3">
@@ -1152,6 +1498,7 @@ export default function PokemonGoJourney() {
                     key={pokemon.id}
                     variant="outline"
                     onClick={() => addPokemonToTeam(pokemon)}
+                    onDoubleClick={() => setShowPokedexInfo(pokemon)}
                     disabled={selectedPokemon.length >= 3}
                     className="h-auto p-2 flex flex-col items-center gap-1 text-xs hover:scale-105 transition-transform"
                   >
@@ -1218,6 +1565,101 @@ export default function PokemonGoJourney() {
             </div>
           </CardContent>
         </Card>
+        
+        {/* Pokédex Info Popup */}
+        {showPokedexInfo && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl font-bold text-gray-800 dark:text-white">Pokédex Entry</h3>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setShowPokedexInfo(null)}
+                    className="h-8 w-8"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+                
+                <div className="text-center mb-4">
+                  <img 
+                    src={showPokedexInfo.image} 
+                    alt={showPokedexInfo.name} 
+                    className="w-32 h-32 mx-auto object-contain"
+                  />
+                  <h4 className="text-2xl font-bold text-gray-800 dark:text-white mt-2">{showPokedexInfo.name}</h4>
+                  <div className="flex justify-center gap-2 mt-2">
+                    {showPokedexInfo.types.map((type, index) => (
+                      <Badge key={index} variant="secondary" className="text-xs">
+                        {type}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-300">CP:</span>
+                    <span className="font-semibold">{showPokedexInfo.cp.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-300">Region:</span>
+                    <span className="font-semibold">{showPokedexInfo.region}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-300">Caught:</span>
+                    <span className="font-semibold">{new Date(showPokedexInfo.caughtDate).toLocaleDateString()}</span>
+                  </div>
+                  
+                  {/* Special Status */}
+                  <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+                    <div className="flex flex-wrap gap-2">
+                      {showPokedexInfo.isLegendary && (
+                        <Badge className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+                          <Crown className="h-3 w-3 mr-1" />
+                          Legendary
+                        </Badge>
+                      )}
+                      {showPokedexInfo.isShiny && (
+                        <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">
+                          <Sparkles className="h-3 w-3 mr-1" />
+                          Shiny
+                        </Badge>
+                      )}
+                      {showPokedexInfo.isEvent && (
+                        <Badge className="bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200">
+                          <Calendar className="h-3 w-3 mr-1" />
+                          Event
+                        </Badge>
+                      )}
+                      {showPokedexInfo.isRare && (
+                        <Badge className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+                          <ZapIcon className="h-3 w-3 mr-1" />
+                          Rare
+                        </Badge>
+                      )}
+                      {showPokedexInfo.isMighty && (
+                        <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">
+                          <SwordIcon className="h-3 w-3 mr-1" />
+                          Mighty
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {/* Fun Fact */}
+                  <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+                    <p className="text-sm text-gray-600 dark:text-gray-300 italic">
+                      {getFunFact(showPokedexInfo.name, showPokedexInfo.types[0])}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
