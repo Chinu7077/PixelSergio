@@ -189,14 +189,14 @@ export default function PokemonGoJourney() {
       const move = getMoveForType(myPokemon.types[0]);
       const moveEmoji = getMoveEmoji(myPokemon.types[0]);
       
-      battleSteps.push(`Round ${turn}: My ${myPokemon.name} used ${move} ${moveEmoji}! Your ${oppPokemon.name} took damage!`);
-      battleSteps.push(`Type advantage: My ${myPokemon.types[0]} vs Your ${oppPokemon.types[0]} - ${effectivenessText}!`);
+      battleSteps.push(`Round ${turn}: My favorite ${myPokemon.name} used ${move} ${moveEmoji}! Your ${oppPokemon.name} (from my collection) took damage!`);
+      battleSteps.push(`Type advantage: My favorite ${myPokemon.types[0]} vs Your ${oppPokemon.types[0]} - ${effectivenessText}!`);
       
       turn++;
     }
     
     // Victory message
-    battleSteps.push("🎉 Victory! My team's superior strategy secured the win!");
+    battleSteps.push("🎉 Victory! My favorite team's superior strategy secured the win!");
     
     // Animate battle log
     let currentStep = 0;
@@ -1176,12 +1176,12 @@ export default function PokemonGoJourney() {
               <Play className="h-6 w-6 text-purple-600 dark:text-purple-400" />
               <CardTitle className="text-2xl text-gray-800 dark:text-white">Battle Simulator</CardTitle>
             </div>
-                            <p className="text-gray-600 dark:text-gray-300">Choose 3 Pokémon (can be the same Pokémon multiple times) and battle against my unbeatable team!</p>
+                            <p className="text-gray-600 dark:text-gray-300">Choose 3 Pokémon from my collection and battle against my favorite unbeatable team!</p>
           </CardHeader>
           <CardContent className="space-y-6">
                         {/* Team Selection */}
             <div>
-              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">Choose Your Team to Battle Against Me (Can Include Duplicates)</h3>
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">Choose 3 Pokémon from My Collection (Can Include Duplicates)</h3>
               
               {/* Team Power Meter */}
               {selectedPokemon.length > 0 && (
@@ -1309,7 +1309,7 @@ export default function PokemonGoJourney() {
               <div className="mt-6 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
                 <h3 className="text-lg font-semibold text-green-800 dark:text-green-300 mb-3 flex items-center gap-2">
                   <Trophy className="h-5 w-5" />
-                  Battle Result: My Team Wins! 🎉
+                  Battle Result: My Favorite Team Wins! 🎉
                 </h3>
                 
                 {/* Debug Info - Remove this after fixing */}
@@ -1324,7 +1324,7 @@ export default function PokemonGoJourney() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-4">
                   {/* User's Team */}
                   <div>
-                    <h4 className="font-semibold text-red-700 dark:text-red-400 mb-2">Your Team (Challenger):</h4>
+                    <h4 className="font-semibold text-red-700 dark:text-red-400 mb-2">Your Team (From My Collection):</h4>
                     {battleResult.opponentTeam && battleResult.opponentTeam.length > 0 ? (
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                         {battleResult.opponentTeam.map((pokemon, index) => (
@@ -1367,7 +1367,7 @@ export default function PokemonGoJourney() {
                   
                   {/* My Winning Team */}
                   <div>
-                    <h4 className="font-semibold text-green-700 dark:text-green-400 mb-2">My Team (Champion):</h4>
+                    <h4 className="font-semibold text-green-700 dark:text-green-400 mb-2">My Favorite Team (Champion):</h4>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                       {battleResult.myTeam.map((pokemon, index) => (
                         <div key={index} className="p-3 bg-white/70 dark:bg-gray-800/70 rounded-lg border border-green-200 dark:border-green-700">
@@ -1437,7 +1437,7 @@ export default function PokemonGoJourney() {
                     variant="outline" 
                     onClick={() => {
                       // Share battle result
-                      const shareText = `🎮 Battle Result: My team defeated ${selectedPokemon.map(p => p.name).join(', ')} with strategic type advantages! ⚔️`;
+                      const shareText = `🎮 Battle Result: My favorite team defeated ${selectedPokemon.map(p => p.name).join(', ')} (from my collection) with strategic type advantages! ⚔️`;
                       if (navigator.share) {
                         navigator.share({ text: shareText });
                       } else {
@@ -1455,9 +1455,9 @@ export default function PokemonGoJourney() {
 
             {/* Single Pokémon Selector */}
             <div>
-              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">Single Pokémon Selector</h3>
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">Choose from My Pokémon Collection</h3>
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                💡 Double-click any Pokémon for detailed Pokédex information!
+                💡 Select 3 Pokémon from my collection to battle against my favorite team! Double-click any Pokémon for detailed Pokédex information!
               </p>
               
               {/* Search and Filters */}
