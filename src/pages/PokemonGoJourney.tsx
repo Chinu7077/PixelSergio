@@ -1322,30 +1322,6 @@ export default function PokemonGoJourney() {
                 
                 {/* Teams Comparison */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-4">
-                  {/* My Winning Team */}
-                  <div>
-                    <h4 className="font-semibold text-green-700 dark:text-green-400 mb-2">Your Team:</h4>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                      {battleResult.myTeam.map((pokemon, index) => (
-                        <div key={index} className="p-3 bg-white/70 dark:bg-gray-800/70 rounded-lg border border-green-200 dark:border-green-700">
-                          <p className="font-semibold text-green-800 dark:text-green-400">{pokemon.name}</p>
-                          <p className="text-sm text-gray-600 dark:text-gray-300">{pokemon.type}</p>
-                          <p className="text-sm text-gray-600 dark:text-gray-300">CP: {pokemon.cp.toLocaleString()}</p>
-                          <div className="mt-2">
-                            <p className="text-xs font-semibold text-gray-700 dark:text-gray-300">Moves:</p>
-                            <div className="flex flex-wrap gap-1 mt-1">
-                              {pokemon.moves.map((move, moveIndex) => (
-                                <Badge key={moveIndex} variant="secondary" className="text-xs">
-                                  {move}
-                                </Badge>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  
                   {/* Opponent Team */}
                   <div>
                     <h4 className="font-semibold text-red-700 dark:text-red-400 mb-2">Opponent Team:</h4>
@@ -1387,6 +1363,30 @@ export default function PokemonGoJourney() {
                         </p>
                       </div>
                     )}
+                  </div>
+                  
+                  {/* My Winning Team */}
+                  <div>
+                    <h4 className="font-semibold text-green-700 dark:text-green-400 mb-2">Your Team:</h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      {battleResult.myTeam.map((pokemon, index) => (
+                        <div key={index} className="p-3 bg-white/70 dark:bg-gray-800/70 rounded-lg border border-green-200 dark:border-green-700">
+                          <p className="font-semibold text-green-800 dark:text-green-400">{pokemon.name}</p>
+                          <p className="text-sm text-gray-600 dark:text-gray-300">{pokemon.type}</p>
+                          <p className="text-sm text-gray-600 dark:text-gray-300">CP: {pokemon.cp.toLocaleString()}</p>
+                          <div className="mt-2">
+                            <p className="text-xs font-semibold text-gray-700 dark:text-gray-300">Moves:</p>
+                            <div className="flex flex-wrap gap-1 mt-1">
+                              {pokemon.moves.map((move, moveIndex) => (
+                                <Badge key={moveIndex} variant="secondary" className="text-xs">
+                                  {move}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
 
@@ -1437,7 +1437,7 @@ export default function PokemonGoJourney() {
                     variant="outline" 
                     onClick={() => {
                       // Share battle result
-                      const shareText = `🎮 Battle Result: ${selectedPokemon.map(p => p.name).join(', ')} defeated ${battleResult.opponentTeam?.map(p => p.name).join(', ')} with strategic type advantages! ⚔️`;
+                      const shareText = `🎮 Battle Result: ${battleResult.opponentTeam?.map(p => p.name).join(', ')} defeated ${selectedPokemon.map(p => p.name).join(', ')} with strategic type advantages! ⚔️`;
                       if (navigator.share) {
                         navigator.share({ text: shareText });
                       } else {
